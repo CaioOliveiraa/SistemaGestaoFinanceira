@@ -1,8 +1,9 @@
 import { Dialect } from 'sequelize';
 import { Sequelize } from 'sequelize-typescript';
 import dotenv from 'dotenv';
-import path from 'path';
 import { User } from '../models/user.model';
+import { Category } from '../models/category.model';
+import { Transaction } from '../models/transaction.model';
 
 dotenv.config();
 
@@ -13,7 +14,7 @@ const sequelize = new Sequelize({
     username: process.env.DB_USER,
     password: process.env.DB_PASS,
     database: process.env.DB_NAME,
-    models: [User],
+    models: [User, Category, Transaction],
     logging: false,
 });
 

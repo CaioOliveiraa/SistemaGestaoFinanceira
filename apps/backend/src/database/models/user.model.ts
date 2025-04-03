@@ -7,13 +7,13 @@ import {
     Default,
     CreatedAt,
     UpdatedAt,
+    Unique,
+    HasMany,
 } from 'sequelize-typescript';
 import { v4 as uuidv4 } from 'uuid';
-
-export enum UserType {
-    ADMIN = 'admin',
-    COMUM = 'comum',
-}
+import { UserType } from '../../types/user.type';
+import { Category } from './category.model';
+import { Transaction } from './transaction.model';
 
 @Table({ tableName: 'users' })
 export class User extends Model<User> {
@@ -23,46 +23,35 @@ export class User extends Model<User> {
     id!: string;
 
     @Column(DataType.STRING)
-    nome!: string;
+    name!: string;
 
-    @Column({
-        type: DataType.STRING,
-        unique: true,
-    })
+    @Unique
+    @Column(DataType.STRING)
     email!: string;
 
-    @Column({
-        type: DataType.STRING,
-        field: 'senha_hash',
-    })
-    senhaHash!: string;
+    @Column(DataType.STRING)
+    passwordHash!: string;
 
     @Column({
         type: DataType.ENUM(...Object.values(UserType)),
-        defaultValue: UserType.COMUM,
+        defaultValue: UserType.COMMON,
     })
-    tipo!: UserType;
+    type!: UserType;
 
-    @Column({
-        type: DataType.STRING,
-        allowNull: true,
-        field: 'otp_secret',
-    })
+    @Column(DataType.STRING)
     otpSecret!: string | null;
 
-    @Column({
-        type: DataType.STRING,
-        allowNull: true,
-        field: 'oauth_provider',
-    })
+    @Column(DataType.STRING)
     oauthProvider!: string | null;
 
-    @Column({
-        type: DataType.STRING,
-        allowNull: true,
-        field: 'oauth_id',
-    })
+    @Column(DataType.STRING)
     oauthId!: string | null;
+
+    @HasMany(() => Category)
+    categories!: Category[];
+
+    @HasMany(() => Transaction)
+    transactions!: Transaction[];
 
     @CreatedAt
     @Column({ field: 'created_at' })

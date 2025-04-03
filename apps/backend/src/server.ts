@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
 (async () => {
     try {
         console.log('🔁 Tentando conectar ao banco...');
-        await sequelize.sync({ alter: true });
+        await sequelize.authenticate();
         console.log('📦 Banco conectado com sucesso!');
 
         app.listen(port, () => {
