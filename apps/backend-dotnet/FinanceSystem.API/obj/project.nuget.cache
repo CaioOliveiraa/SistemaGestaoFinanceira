@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "B4traLUu9j4=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Caio\\Documents\\.Dev\\finance_system\\apps\\backend-dotnet\\FinanceSystem.API\\FinanceSystem.API.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Caio\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.3\\microsoft.aspnetcore.openapi.9.0.3.nupkg.sha512",
+    "C:\\Users\\Caio\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}
