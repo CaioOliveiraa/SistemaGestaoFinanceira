@@ -11,6 +11,8 @@ Env.Load(); // ← isso carrega o .env na raiz do projeto
 builder.Services.AddDbContext<FinanceDbContext>(options =>
     options.UseNpgsql(Environment.GetEnvironmentVariable("DB_CONNECTION")));
 
+Console.WriteLine("🔍 Connection String em uso: " + builder.Configuration.GetConnectionString("DefaultConnection"));
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -24,5 +26,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
 
 app.Run();

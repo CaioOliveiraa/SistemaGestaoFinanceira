@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
     db:
         image: postgres
@@ -13,17 +15,14 @@ services:
             - pgdata:/var/lib/postgresql/data
 
     backend:
+        container_name: backend-finance
         build:
             context: ./apps/backend-dotnet/FinanceSystem.API
-        container_name: backend-finance
         restart: always
         depends_on:
             - db
         ports:
-            - '3001:80'
-        volumes:
-            - ./apps/backend:/app
-        command: npm run dev
+            - '3001:80' # Porta 3001 da maquina, 80 no container
 
 volumes:
     pgdata:
