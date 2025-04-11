@@ -14,13 +14,13 @@ services:
 
     backend:
         build:
-            context: ./apps/backend
+            context: ./apps/backend-dotnet/FinanceSystem.API
         container_name: backend-finance
         restart: always
         depends_on:
             - db
         ports:
-            - '3001:3001'
+            - '3001:80'
         volumes:
             - ./apps/backend:/app
         command: npm run dev
