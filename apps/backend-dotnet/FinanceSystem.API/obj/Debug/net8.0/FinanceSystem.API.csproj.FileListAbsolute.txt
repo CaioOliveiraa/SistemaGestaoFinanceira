@@ -106,3 +106,4 @@ C:\Users\Caio\Documents\.Dev\finance_system\apps\backend-dotnet\FinanceSystem.AP
 C:\Users\Caio\Documents\.Dev\finance_system\apps\backend-dotnet\FinanceSystem.API\obj\Debug\net8.0\FinanceSystem.API.pdb
 C:\Users\Caio\Documents\.Dev\finance_system\apps\backend-dotnet\FinanceSystem.API\obj\Debug\net8.0\FinanceSystem.API.genruntimeconfig.cache
 C:\Users\Caio\Documents\.Dev\finance_system\apps\backend-dotnet\FinanceSystem.API\obj\Debug\net8.0\ref\FinanceSystem.API.dll
+C:\Users\Caio\Documents\.Dev\finance_system\apps\backend-dotnet\FinanceSystem.API\bin\Debug\net8.0\BCrypt.Net-Next.dll

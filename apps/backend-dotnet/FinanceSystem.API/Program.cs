@@ -1,5 +1,8 @@
 using FinanceSystem.API.Data;
 using Microsoft.EntityFrameworkCore;
+using FinanceSystem.API.Repositories;
+using FinanceSystem.API.Repositories.Interfaces;
+using FinanceSystem.API.Services;
 using DotNetEnv;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,7 +14,10 @@ Env.Load(); // ← isso carrega o .env na raiz do projeto
 builder.Services.AddDbContext<FinanceDbContext>(options =>
     options.UseNpgsql(Environment.GetEnvironmentVariable("DB_CONNECTION")));
 
-Console.WriteLine("🔍 Connection String em uso: " + builder.Configuration.GetConnectionString("DefaultConnection"));
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<UserService>();
+
+builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -26,6 +32,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.MapControllers();
 
 
 app.Run();
