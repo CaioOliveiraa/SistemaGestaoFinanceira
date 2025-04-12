@@ -17,7 +17,7 @@ services:
     backend:
         container_name: backend-finance
         build:
-            context: ./apps/backend-dotnet/FinanceSystem.API
+            context: ./apps/backend/FinanceSystem.API
         restart: always
         depends_on:
             - db

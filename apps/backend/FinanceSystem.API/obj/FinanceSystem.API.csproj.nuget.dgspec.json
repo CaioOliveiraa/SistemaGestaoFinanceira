@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Caio\\Documents\\.Dev\\finance_system\\apps\\backend-dotnet\\FinanceSystem.API\\FinanceSystem.API.csproj": {}
+    "C:\\Users\\Caio\\Documents\\.Dev\\finance_system\\apps\\backend\\FinanceSystem.API\\FinanceSystem.API.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Caio\\Documents\\.Dev\\finance_system\\apps\\backend-dotnet\\FinanceSystem.API\\FinanceSystem.API.csproj": {
+    "C:\\Users\\Caio\\Documents\\.Dev\\finance_system\\apps\\backend\\FinanceSystem.API\\FinanceSystem.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Caio\\Documents\\.Dev\\finance_system\\apps\\backend-dotnet\\FinanceSystem.API\\FinanceSystem.API.csproj",
+        "projectUniqueName": "C:\\Users\\Caio\\Documents\\.Dev\\finance_system\\apps\\backend\\FinanceSystem.API\\FinanceSystem.API.csproj",
         "projectName": "FinanceSystem.API",
-        "projectPath": "C:\\Users\\Caio\\Documents\\.Dev\\finance_system\\apps\\backend-dotnet\\FinanceSystem.API\\FinanceSystem.API.csproj",
+        "projectPath": "C:\\Users\\Caio\\Documents\\.Dev\\finance_system\\apps\\backend\\FinanceSystem.API\\FinanceSystem.API.csproj",
         "packagesPath": "C:\\Users\\Caio\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Caio\\Documents\\.Dev\\finance_system\\apps\\backend-dotnet\\FinanceSystem.API\\obj\\",
+        "outputPath": "C:\\Users\\Caio\\Documents\\.Dev\\finance_system\\apps\\backend\\FinanceSystem.API\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

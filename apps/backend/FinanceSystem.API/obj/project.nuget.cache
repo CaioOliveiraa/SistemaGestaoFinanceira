@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "GIG/gs4kd0Y=",
+  "dgSpecHash": "1Y6YkxhLjpY=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Caio\\Documents\\.Dev\\finance_system\\apps\\backend-dotnet\\FinanceSystem.API\\FinanceSystem.API.csproj",
+  "projectFilePath": "C:\\Users\\Caio\\Documents\\.Dev\\finance_system\\apps\\backend\\FinanceSystem.API\\FinanceSystem.API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Caio\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\Caio\\.nuget\\packages\\dotnetenv\\3.1.1\\dotnetenv.3.1.1.nupkg.sha512",
@@ -135,7 +135,7 @@
       "code": "NU1603",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "FinanceSystem.API depende de Npgsql.EntityFrameworkCore.PostgreSQL (>= 8.0.3), mas Npgsql.EntityFrameworkCore.PostgreSQL 8.0.3 não foi encontrado. A melhor correspondência aproximada de Npgsql.EntityFrameworkCore.PostgreSQL 8.0.4 foi resolvida.",
+      "message": "FinanceSystem.API depends on Npgsql.EntityFrameworkCore.PostgreSQL (>= 8.0.3) but Npgsql.EntityFrameworkCore.PostgreSQL 8.0.3 was not found. An approximate best match of Npgsql.EntityFrameworkCore.PostgreSQL 8.0.4 was resolved.",
       "libraryId": "Npgsql.EntityFrameworkCore.PostgreSQL",
       "targetGraphs": [
         "net8.0"
