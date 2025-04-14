@@ -25,7 +25,7 @@ namespace FinanceSystem.API.Services
                 throw new UnauthorizedAccessException("Invalid credentials");
             }
 
-            var secret = _config["JwtSecret"];
+            var secret = Environment.GetEnvironmentVariable("JwtSecret");
 
             if (string.IsNullOrEmpty(secret)) throw new Exception("JWT secret not found in configuration.");
 

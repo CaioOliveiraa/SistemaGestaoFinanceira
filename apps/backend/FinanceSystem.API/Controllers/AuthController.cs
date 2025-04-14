@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FinanceSystem.API.Controllers
 {
     [ApiController]
-    [Route("aoi/auth")]
+    [Route("api/auth")]
     public class AuthController : ControllerBase
     {
         private readonly AuthService _authService;
@@ -33,7 +33,7 @@ namespace FinanceSystem.API.Controllers
                     Expires = DateTime.UtcNow.AddHours(3)
                 });
 
-                return Ok(new { message = "Login successful" });
+                return Ok(new { message = "Login successful, token generated:", token });
             }
             catch (UnauthorizedAccessException e)
             {
