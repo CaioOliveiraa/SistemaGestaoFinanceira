@@ -18,9 +18,9 @@ namespace FinanceSystem.API.Models
         public TransactionType Type { get; set; }
 
         [Required]
-        public decimal Value { get; set; } 
+        public decimal Amount { get; set; } 
 
-        public string Description { get; set; } = string.Empty;
+        public string? Description { get; set; } = string.Empty;
         
         [Required]
         public DateTime Date { get; set; }
