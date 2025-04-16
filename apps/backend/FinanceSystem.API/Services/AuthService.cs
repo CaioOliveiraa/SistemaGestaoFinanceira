@@ -22,10 +22,11 @@ namespace FinanceSystem.API.Services
             if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
                 throw new UnauthorizedAccessException("Credenciais inválidas");
 
-            var secret = _config["JwtSecret"];
+            var secret = Environment.GetEnvironmentVariable("JwtSecret");
             if (string.IsNullOrEmpty(secret)) throw new Exception("JWT secret não definido");
 
             var token = JwtHelper.GenerateJwtToken(user, secret);
+            Console.WriteLine(token);
             return (user, token);
         }
     }

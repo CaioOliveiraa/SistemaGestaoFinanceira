@@ -225,3 +225,5 @@ C:\Users\Caio\Documents\.Dev\finance_system\apps\backend\FinanceSystem.API\obj\D
 C:\Users\Caio\Documents\.Dev\finance_system\apps\backend\FinanceSystem.API\obj\Debug\net8.0\FinanceS.BA6026E8.Up2Date
 C:\Users\Caio\Documents\.Dev\finance_system\apps\backend\FinanceSystem.API\obj\Debug\net8.0\FinanceSystem.API.genruntimeconfig.cache
 C:\Users\Caio\Documents\.Dev\finance_system\apps\backend\FinanceSystem.API\obj\Debug\net8.0\ref\FinanceSystem.API.dll
+C:\Users\Caio\Documents\.Dev\finance_system\apps\backend\FinanceSystem.API\bin\Debug\net8.0\AutoMapper.dll
+C:\Users\Caio\Documents\.Dev\finance_system\apps\backend\FinanceSystem.API\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
