@@ -16,20 +16,17 @@ namespace FinanceSystem.API.Services
             _config= config;
         }
 
-        public async Task<string> LoginAsync(LoginDto dto)
+        public async Task<(User user, string token)> LoginAsync(LoginDto dto)
         {
             var user = await _repo.GetByEmailAsync(dto.Email);
-
             if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
-            {
-                throw new UnauthorizedAccessException("Invalid credentials");
-            }
+                throw new UnauthorizedAccessException("Credenciais inválidas");
 
-            var secret = Environment.GetEnvironmentVariable("JwtSecret");
+            var secret = _config["JwtSecret"];
+            if (string.IsNullOrEmpty(secret)) throw new Exception("JWT secret não definido");
 
-            if (string.IsNullOrEmpty(secret)) throw new Exception("JWT secret not found in configuration.");
-
-            return JwtHelper.GenerateJwtToken(user, secret);
+            var token = JwtHelper.GenerateJwtToken(user, secret);
+            return (user, token);
         }
     }
 }
