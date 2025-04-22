@@ -31,6 +31,8 @@ builder.Services.AddScoped<CategoryService>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<TransactionService>();
 
+builder.Services.AddScoped<DashboardService>();
+
 
 // Configuração do JWT
 var jwtSecret = Environment.GetEnvironmentVariable("JwtSecret");
