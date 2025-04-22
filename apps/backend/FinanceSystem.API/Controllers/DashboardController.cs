@@ -40,5 +40,15 @@ namespace FinanceSystem.API.Controllers
             return Ok(result); 
         }
 
+        [HttpGet("by-category")]
+        public async Task<IActionResult> GetByCategory()
+        {
+            var userId = GetUserId();
+
+            var result = await _service.GetByCategoryAsync(userId);
+
+            return Ok(result);
+        }
+
     }
 }

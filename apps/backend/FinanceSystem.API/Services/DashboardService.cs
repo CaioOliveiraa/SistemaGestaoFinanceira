@@ -56,5 +56,26 @@ namespace FinanceSystem.API.Services
 
             return grouped.ToList();
         }
+
+        public async Task<IEnumerable<object>> GetByCategoryAsync(Guid userId)
+        {
+            var transactions = await _repo.GetAllByUserIdAsync(userId);
+
+            var grouped = transactions
+                .Where(t => t.Date.Year == DateTime.UtcNow.Year && t.Date.Month == DateTime.UtcNow.Month);
+
+            var result = grouped
+                .GroupBy( t => new { t.Category.Name, t.Category.Type })
+                .Select(t => new
+                {
+                    Category = t.Key.Name,
+                    Type = t.Key.Type.ToString(),
+                    Amount = t.Sum(t => t.Amount)
+                })
+                .OrderByDescending(g => g.Amount)
+                .ToList();
+
+            return result;
+        }
     }
 }
