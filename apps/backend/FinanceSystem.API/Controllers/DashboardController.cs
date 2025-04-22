@@ -30,5 +30,15 @@ namespace FinanceSystem.API.Controllers
             return Ok(summary);
         }
 
+        [HttpGet("monthly")]
+        public async Task<IActionResult> GetMonthly()
+        {
+            var userId = GetUserId();
+
+            var result = await _service.GetMonthlyAsync(userId);
+
+            return Ok(result); 
+        }
+
     }
 }

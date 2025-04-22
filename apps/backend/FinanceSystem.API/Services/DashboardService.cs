@@ -30,5 +30,31 @@ namespace FinanceSystem.API.Services
                 Balance = income - expense
             };
         }
+
+        public async Task<IEnumerable<object>> GetMonthlyAsync(Guid userId)
+        {
+            var transactions = await _repo.GetAllByUserIdAsync(userId);
+
+            var grouped = transactions
+                .GroupBy(t => new { t.Date.Year, t.Date.Month})
+                .OrderByDescending(t => t.Key.Year * 100 + t.Key.Month) // Gera uma ordenação numerica no estilo YYYYMM
+                .Take(6)
+                .Select(t => 
+                {
+                    var income = t.Where(t => t.Type == Models.TransactionType.Income).Sum(t => t.Amount);
+                    var expense = t.Where(t => t.Type == Models.TransactionType.Expense).Sum(t => t.Amount);
+
+                    return new
+                    {
+                        Month = $"{t.Key.Month}/{t.Key.Year}",
+                        Income = income,
+                        Expense = expense,
+                        Balance = income - expense
+                    };
+                })
+                .OrderBy(x => x.Month);
+
+            return grouped.ToList();
+        }
     }
 }
