@@ -24,9 +24,7 @@ namespace FinanceSystem.API.Controllers
         public async Task<IActionResult> GetSummary()
         {
             var userId = GetUserId();
-
             var summary = await _service.GetSymmaryAsync(userId);
-
             return Ok(summary);
         }
 
@@ -34,9 +32,7 @@ namespace FinanceSystem.API.Controllers
         public async Task<IActionResult> GetMonthly()
         {
             var userId = GetUserId();
-
             var result = await _service.GetMonthlyAsync(userId);
-
             return Ok(result); 
         }
 
@@ -44,9 +40,15 @@ namespace FinanceSystem.API.Controllers
         public async Task<IActionResult> GetByCategory()
         {
             var userId = GetUserId();
-
             var result = await _service.GetByCategoryAsync(userId);
+            return Ok(result);
+        }
 
+        [HttpGet("daily")]
+        public async Task<IActionResult> GetDaily()
+        {
+            var userId = GetUserId();
+            var result = await _service.GetDailyAsync(userId);
             return Ok(result);
         }
 

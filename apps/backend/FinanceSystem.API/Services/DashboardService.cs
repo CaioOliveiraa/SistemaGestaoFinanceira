@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using FinanceSystem.API.Repositories.Interfaces;
 
 namespace FinanceSystem.API.Services
@@ -76,6 +77,33 @@ namespace FinanceSystem.API.Services
                 .ToList();
 
             return result;
+        }
+        
+        public async Task<IEnumerable<object>> GetDailyAsync(Guid userId)
+        {
+            var transactions = await _repo.GetAllByUserIdAsync(userId);
+            var startDate = DateTime.UtcNow.AddDays(-30);
+            var recent = transactions.Where( t => t.Date >= startDate);
+
+
+            var grouped = recent
+                .GroupBy(t => t.Date.Date)
+                .Select(t =>
+                {
+                    var income = t.Where(t => t.Type == Models.TransactionType.Income).Sum(t => t.Amount);
+                    var expense = t.Where(t => t.Type == Models.TransactionType.Expense).Sum(t => t.Amount);
+
+                    return new
+                    {
+                        Date = t.Key.ToString("dd/MM/yyyy"),
+                        Income = income,
+                        Expense = expense
+                    };
+                })
+                .OrderBy(g => g.Date)
+                .ToList();
+
+            return grouped;
         }
     }
 }
