@@ -33,6 +33,7 @@ builder.Services.AddScoped<TransactionService>();
 
 builder.Services.AddScoped<DashboardService>();
 
+builder.Services.AddScoped<ExportService>();
 
 // Configuração do JWT
 var jwtSecret = Environment.GetEnvironmentVariable("JwtSecret");

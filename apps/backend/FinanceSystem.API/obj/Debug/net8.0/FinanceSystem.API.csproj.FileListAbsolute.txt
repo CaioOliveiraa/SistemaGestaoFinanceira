@@ -227,3 +227,11 @@ C:\Users\Caio\Documents\.Dev\finance_system\apps\backend\FinanceSystem.API\obj\D
 C:\Users\Caio\Documents\.Dev\finance_system\apps\backend\FinanceSystem.API\obj\Debug\net8.0\ref\FinanceSystem.API.dll
 C:\Users\Caio\Documents\.Dev\finance_system\apps\backend\FinanceSystem.API\bin\Debug\net8.0\AutoMapper.dll
 C:\Users\Caio\Documents\.Dev\finance_system\apps\backend\FinanceSystem.API\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+C:\Users\Caio\Documents\.Dev\finance_system\apps\backend\FinanceSystem.API\bin\Debug\net8.0\ClosedXML.dll
+C:\Users\Caio\Documents\.Dev\finance_system\apps\backend\FinanceSystem.API\bin\Debug\net8.0\ClosedXML.Parser.dll
+C:\Users\Caio\Documents\.Dev\finance_system\apps\backend\FinanceSystem.API\bin\Debug\net8.0\DocumentFormat.OpenXml.dll
+C:\Users\Caio\Documents\.Dev\finance_system\apps\backend\FinanceSystem.API\bin\Debug\net8.0\DocumentFormat.OpenXml.Framework.dll
+C:\Users\Caio\Documents\.Dev\finance_system\apps\backend\FinanceSystem.API\bin\Debug\net8.0\ExcelNumberFormat.dll
+C:\Users\Caio\Documents\.Dev\finance_system\apps\backend\FinanceSystem.API\bin\Debug\net8.0\RBush.dll
+C:\Users\Caio\Documents\.Dev\finance_system\apps\backend\FinanceSystem.API\bin\Debug\net8.0\SixLabors.Fonts.dll
+C:\Users\Caio\Documents\.Dev\finance_system\apps\backend\FinanceSystem.API\bin\Debug\net8.0\System.IO.Packaging.dll
