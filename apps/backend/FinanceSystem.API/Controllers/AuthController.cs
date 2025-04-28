@@ -50,5 +50,13 @@ namespace FinanceSystem.API.Controllers
                 return BadRequest(new { error = e.Message });
             }
         }
+
+        [HttpPost("Logout")]
+        public IActionResult Logout()
+        {
+            Response.Cookies.Delete("jwt");
+
+            return Ok(new { message = "Logout efetuado com sucesso" });
+        }
     }
 }
