@@ -23,12 +23,23 @@ namespace FinanceSystem.API.Controllers
         public async Task<IActionResult> ExportToExcel([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
         {
             if (startDate > endDate) return BadRequest("Data inicial deve ser menor que a data final.");
-            
+
             var userId = GetUserId();
             var fileBytes = await _service.ExportToExcelAsync(userId, startDate, endDate);
 
             return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "transacoes.xlsx");
 
+        }
+
+        [HttpGet("pdf")]
+        public async Task<IActionResult> ExportToPdf([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
+        {
+            if (startDate > endDate) return BadRequest("Data inicial deve ser menor que a data final.");
+
+            var userId = GetUserId();
+            var fileBytes = await _service.ExportToPdfAsync(userId, startDate, endDate);
+
+            return File(fileBytes, "application/pdf", "transacoes.pdf");
         }
     }
 }

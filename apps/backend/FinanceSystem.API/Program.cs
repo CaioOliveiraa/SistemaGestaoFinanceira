@@ -11,6 +11,8 @@ using FinanceSystem.API.Mappings;
 
 var builder = WebApplication.CreateBuilder(args);
 
+QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
+
 // Carregar variáveis do arquivo .env
 Env.Load();
 
@@ -59,7 +61,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         {
             OnMessageReceived = context =>
             {
-                var token = context.Request.Cookies["jwt"]; 
+                var token = context.Request.Cookies["jwt"];
                 if (!string.IsNullOrEmpty(token))
                 {
                     context.Token = token;
