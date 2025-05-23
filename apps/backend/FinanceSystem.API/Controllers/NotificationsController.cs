@@ -24,7 +24,7 @@ namespace FinanceSystem.API.Controllers
                 return BadRequest(ModelState);
 
             await _emailService.SendEmailAsync(dto.To, dto.Subject, dto.Body);
-            return Ok(new { message = "E-mail (mock) enviado com sucesso." });
+            return Ok(new { message = "E-mail enviado com sucesso." });
         }
     }
 }

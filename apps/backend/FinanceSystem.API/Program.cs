@@ -15,6 +15,7 @@ QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
 
 // Carregar variáveis do arquivo .env
 Env.Load();
+builder.Configuration.AddEnvironmentVariables();
 
 // Registrar o DbContext com PostgreSQL
 builder.Services.AddDbContext<FinanceDbContext>(options =>
@@ -37,7 +38,7 @@ builder.Services.AddScoped<DashboardService>();
 
 builder.Services.AddScoped<ExportService>();
 
-builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IEmailService, SmtpEmailService>();
 
 // Configuração do JWT
 var jwtSecret = Environment.GetEnvironmentVariable("JwtSecret");
