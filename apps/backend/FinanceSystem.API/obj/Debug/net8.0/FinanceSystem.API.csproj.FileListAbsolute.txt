@@ -181,3 +181,9 @@ C:\Users\Caio\Documents\.Dev\SistemaGestaoFinanceira\apps\backend\FinanceSystem.
 C:\Users\Caio\Documents\.Dev\SistemaGestaoFinanceira\apps\backend\FinanceSystem.API\bin\Debug\net8.0\MimeKit.dll
 C:\Users\Caio\Documents\.Dev\SistemaGestaoFinanceira\apps\backend\FinanceSystem.API\bin\Debug\net8.0\System.Security.Cryptography.Pkcs.dll
 C:\Users\Caio\Documents\.Dev\SistemaGestaoFinanceira\apps\backend\FinanceSystem.API\bin\Debug\net8.0\runtimes\win\lib\net8.0\System.Security.Cryptography.Pkcs.dll
+C:\Users\Caio\Documents\.Dev\SistemaGestaoFinanceira\apps\backend\FinanceSystem.API\bin\Debug\net8.0\Google.Apis.dll
+C:\Users\Caio\Documents\.Dev\SistemaGestaoFinanceira\apps\backend\FinanceSystem.API\bin\Debug\net8.0\Google.Apis.Auth.dll
+C:\Users\Caio\Documents\.Dev\SistemaGestaoFinanceira\apps\backend\FinanceSystem.API\bin\Debug\net8.0\Google.Apis.Core.dll
+C:\Users\Caio\Documents\.Dev\SistemaGestaoFinanceira\apps\backend\FinanceSystem.API\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\Users\Caio\Documents\.Dev\SistemaGestaoFinanceira\apps\backend\FinanceSystem.API\bin\Debug\net8.0\System.Management.dll
+C:\Users\Caio\Documents\.Dev\SistemaGestaoFinanceira\apps\backend\FinanceSystem.API\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Management.dll

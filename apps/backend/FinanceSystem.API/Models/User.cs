@@ -20,14 +20,14 @@ namespace FinanceSystem.API.Models
         public string Email { get; set; } = string.Empty;
 
         [Required]
-        public string PasswordHash {get; set;} = string.Empty;
+        public string PasswordHash { get; set; } = string.Empty;
 
         [Required]
         public UserType Type { get; set; } = UserType.Common;
 
-        public string? OtpSecret { get; set;}
+        public string? OtpSecret { get; set; }
         public string? OAuthProvider { get; set; }
-        public string? OauthId { get; set; }	
+        public string? OauthId { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;

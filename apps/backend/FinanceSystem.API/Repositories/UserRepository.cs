@@ -28,5 +28,13 @@ namespace FinanceSystem.API.Repositories
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<User?> GetByExternalIdAsync(string provider, string providerId)
+        {
+            return await _context.Users
+                .FirstOrDefaultAsync(u =>
+                    u.OAuthProvider == provider &&
+                    u.OauthId == providerId);
+        }
     }
 }

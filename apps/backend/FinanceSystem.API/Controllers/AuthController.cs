@@ -3,6 +3,7 @@ using AutoMapper;
 using FinanceSystem.API.Dtos;
 using FinanceSystem.API.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace FinanceSystem.API.Controllers
 {
@@ -12,11 +13,13 @@ namespace FinanceSystem.API.Controllers
     {
         private readonly AuthService _authService;
         private readonly IMapper _mapper;
+        private readonly IConfiguration _config;
 
-        public AuthController(AuthService authService, IMapper mapper)
+        public AuthController(AuthService authService, IMapper mapper, IConfiguration config)
         {
             _authService = authService;
             _mapper = mapper;
+            _config = config;
         }
 
         [HttpPost("login")]
@@ -50,6 +53,63 @@ namespace FinanceSystem.API.Controllers
                 return BadRequest(new { error = e.Message });
             }
         }
+
+
+        /// <summary>
+        /// Inicia o fluxo OAuth2 com o Google: redireciona para o consent screen.
+        /// </summary>
+        [HttpGet("oauth/google")]
+        public IActionResult GoogleLogin()
+        {
+            var clientId = _config["GOOGLE_CLIENT_ID"]!;
+            var redirectUri = _config["GOOGLE_REDIRECT_URI"]!;
+            var state = Guid.NewGuid().ToString("N"); // opcional, para proteger contra CSRF
+
+            // Construímos a URL de autorização do Google
+            var url = QueryHelpers.AddQueryString(
+                "https://accounts.google.com/o/oauth2/v2/auth",
+                new Dictionary<string, string>
+                {
+                    ["client_id"] = clientId,
+                    ["redirect_uri"] = redirectUri,
+                    ["response_type"] = "code",
+                    ["scope"] = "openid email profile",
+                    ["state"] = state
+                });
+
+            // Redireciona o browser do usuário para o Google
+            return Redirect(url);
+        }
+
+
+        /// <summary>
+        /// Callback que o Google chama com o código de autorização.
+        /// Aqui trocamos o code, validamos o ID token e geramos nosso JWT.
+        /// </summary>
+        [HttpGet("oauth/google/callback")]
+        public async Task<IActionResult> GoogleCallback([FromQuery] string code)
+        {
+            try
+            {
+                var (user, token) = await _authService.LoginWithGoogleAsync(code);
+
+                Response.Cookies.Append("jwt", token, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict
+                });
+
+                var userDto = _mapper.Map<UserResponseDto>(user);
+                return Ok(userDto);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro ao processar callback do Google: " + ex);
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
 
         [HttpPost("Logout")]
         public IActionResult Logout()
