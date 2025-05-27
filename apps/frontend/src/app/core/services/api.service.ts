@@ -16,11 +16,11 @@ export class ApiService {
         return this.http.get<T>(`${this.baseUrl}/${path}`);
     }
 
-    post<T>(path: string, body: any) {
+    post<T>(path: string, body: unknown) {
         return this.http.post<T>(`${this.baseUrl}/${path}`, body);
     }
 
-    put<T>(path: string, body: any) {
+    put<T>(path: string, body: unknown) {
         return this.http.put<T>(`${this.baseUrl}/${path}`, body);
     }
 
