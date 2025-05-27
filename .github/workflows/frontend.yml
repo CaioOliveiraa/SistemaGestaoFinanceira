@@ -19,12 +19,13 @@ jobs:
             - name: 📥 Checkout do código
               uses: actions/checkout@v3
 
-            # Etapa 2: Configura Node.js (usa mesma versão do seu projeto)
+            # Etapa 2: Configura Node.js e cache
             - name: ⚙️ Setup Node.js
               uses: actions/setup-node@v3
               with:
                   node-version: '18'
                   cache: 'npm'
+                  cache-dependency-path: apps/frontend/package-lock.json
 
             # Etapa 3: Instala dependências
             - name: 📦 Instala dependências
@@ -38,12 +39,10 @@ jobs:
             # - name: 🧪 Testes unitários
             #   run: npm run test -- --watch=false --browsers=ChromeHeadless
 
-            # Etapa 6: Build
+            # Etapa 6: Build de produção
             - name: 🏗️ Build de produção
               run: npm run build -- --configuration=production
 
-            # Etapa 7: (opcional) Deploy – exemplo com Vercel, Firebase, etc.
+            # Etapa 7: Deploy (exemplo comentado)
             # - name: 🚀 Deploy para Vercel
             #   run: npx vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
-
-            # 🔒 Você precisaria configurar esse token em Settings > Secrets do repositório
