@@ -1,0 +1,49 @@
+name: CI - Frontend Angular
+
+# Aciona o workflow em push ou PR na branch main
+on:
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: apps/frontend
+
+        steps:
+            # Etapa 1: Clona o repositório
+            - name: 📥 Checkout do código
+              uses: actions/checkout@v3
+
+            # Etapa 2: Configura Node.js (usa mesma versão do seu projeto)
+            - name: ⚙️ Setup Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: '18'
+                  cache: 'npm'
+
+            # Etapa 3: Instala dependências
+            - name: 📦 Instala dependências
+              run: npm install
+
+            # Etapa 4: Lint (boa prática, verifica código)
+            - name: 🧹 Lint
+              run: npm run lint
+
+            # Etapa 5: Testes (opcional, se você tiver)
+            # - name: 🧪 Testes unitários
+            #   run: npm run test -- --watch=false --browsers=ChromeHeadless
+
+            # Etapa 6: Build
+            - name: 🏗️ Build de produção
+              run: npm run build -- --configuration=production
+
+            # Etapa 7: (opcional) Deploy – exemplo com Vercel, Firebase, etc.
+            # - name: 🚀 Deploy para Vercel
+            #   run: npx vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+            # 🔒 Você precisaria configurar esse token em Settings > Secrets do repositório
