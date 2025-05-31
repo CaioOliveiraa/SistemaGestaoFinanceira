@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
-import { LoginDto } from '../../shared/login.dto';
-import { CreateUserDto } from '../../shared/create-user.dto';
-import { UserResponseDto } from '../../shared/user-response.dto';
+import { LoginDto } from '../../shared/models/login.dto';
+import { CreateUserDto } from '../../shared/models/create-user.dto';
+import { UserResponseDto } from '../../shared/models/user-response.dto';
 import { tap, Observable } from 'rxjs';
 
 /**
