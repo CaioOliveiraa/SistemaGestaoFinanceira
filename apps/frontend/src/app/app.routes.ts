@@ -4,7 +4,7 @@ import { AppLayoutComponent } from './layouts/app-layout.component';
 import { LoginComponent } from './features/auth/login/login.component';
 import { RegisterComponent } from './features/auth/register/register.component';
 import { authGuard } from './core/auth.guard';
-// Em breve: import { DashboardComponent }      from './features/dashboard/dashboard.component';
+import { DashboardComponent } from './features/dashboard/dashboard.component';
 
 export const routes: Routes = [
     {
@@ -23,10 +23,10 @@ export const routes: Routes = [
         children: [
             {
                 path: 'dashboard',
-                pathMatch: 'full' /* component: DashboardComponent */,
+                pathMatch: 'full',
+                component: DashboardComponent,
             },
-            // { path: 'categories', loadComponent: () => import('./features/categories/category-list.component').then(m => m.CategoryListComponent) },
-            // { path: 'transactions', loadComponent: () => import('./features/transactions/transaction-list.component').then(m => m.TransactionListComponent) },
+            // ...
             { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
         ],
     },

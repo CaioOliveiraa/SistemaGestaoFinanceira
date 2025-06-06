@@ -1,0 +1,63 @@
+.dashboard-container {
+    padding: 1rem;
+
+    .summary-section {
+        margin-bottom: 2rem;
+
+        .cards {
+            display: flex;
+            gap: 1rem;
+
+            .card {
+                flex: 1;
+                padding: 1rem;
+                border-radius: 4px;
+                background: white;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+                h3 {
+                    margin: 0 0 0.5rem 0;
+                    font-size: 1rem;
+                }
+
+                p {
+                    font-size: 1.5rem;
+                    font-weight: bold;
+                    margin: 0;
+                }
+
+                &.income {
+                    border-top: 4px solid #28a745;
+                }
+
+                &.expense {
+                    border-top: 4px solid #dc3545;
+                }
+
+                &.balance {
+                    border-top: 4px solid #007bff;
+                }
+            }
+        }
+    }
+
+    .chart-section {
+        background: white;
+        padding: 1rem;
+        margin-bottom: 2rem;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+        h2 {
+            margin-top: 0;
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        canvas {
+            display: block;
+            width: 100% !important;
+            max-height: 400px;
+        }
+    }
+}

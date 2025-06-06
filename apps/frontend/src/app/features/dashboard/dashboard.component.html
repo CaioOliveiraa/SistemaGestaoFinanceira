@@ -1,0 +1,42 @@
+<div class="dashboard-container">
+    <!-- 1) Resumo Geral -->
+    <section class="summary-section">
+        <h2>Resumo Geral</h2>
+        <div class="cards">
+            <div class="card income">
+                <h3>Receita</h3>
+                <p>{{ summary?.income | currency:'BRL' }}</p>
+            </div>
+            <div class="card expense">
+                <h3>Despesa</h3>
+                <p>{{ summary?.expense | currency:'BRL' }}</p>
+            </div>
+            <div class="card balance">
+                <h3>Saldo</h3>
+                <p>{{ summary?.balance | currency:'BRL' }}</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2) Gráfico Mensal (barra) -->
+    <section class="chart-section">
+        <h2>Histórico Mensal (últimos 6 meses)</h2>
+        <canvas baseChart [data]="barChartData" [options]="barChartOptions" chartType="bar">
+        </canvas>
+    </section>
+
+    <!-- 3) Gráfico por Categoria (pizza) -->
+    <section class="chart-section">
+        <h2>Por Categoria (mês atual)</h2>
+        <canvas baseChart [data]="{ labels: pieChartLabels, datasets: [{ data: pieChartData }] }"
+            [options]="pieChartOptions" chartType="pie">
+        </canvas>
+    </section>
+
+    <!-- 4) Gráfico Diário (linha) -->
+    <section class="chart-section">
+        <h2>Movimentação Diária (últimos 30 dias)</h2>
+        <canvas baseChart [data]="lineChartData" [options]="lineChartOptions" chartType="line">
+        </canvas>
+    </section>
+</div>
