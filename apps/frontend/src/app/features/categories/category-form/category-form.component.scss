@@ -1,0 +1,107 @@
+.category-form-container {
+    max-width: 500px;
+    margin: 3rem auto;
+    padding: 2rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+    font-family: 'Segoe UI', sans-serif;
+
+    h2 {
+        text-align: center;
+        color: #1e3a5f;
+        font-size: 1.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.2rem;
+
+        label {
+            display: block;
+            margin-bottom: 0.4rem;
+            color: #333;
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 0.6rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border 0.2s ease;
+
+            &:focus {
+                border-color: #007bff;
+                outline: none;
+                box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.15);
+            }
+        }
+
+        input[type="checkbox"] {
+            margin-right: 0.5rem;
+        }
+
+        .error small {
+            color: #c0392b;
+            font-size: 0.85rem;
+        }
+    }
+
+    .button-group {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 1.5rem;
+
+        button {
+            padding: 0.6rem 1.2rem;
+            font-size: 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+
+            &:disabled {
+                background: #ccc;
+                cursor: not-allowed;
+            }
+        }
+
+        button[type="submit"] {
+            background-color: #28a745;
+            color: white;
+
+            &:hover:enabled {
+                background-color: #218838;
+            }
+        }
+
+        button[type="button"] {
+            background-color: #6c757d;
+            color: white;
+
+            &:hover {
+                background-color: #5a6268;
+            }
+        }
+    }
+
+    @media (max-width: 600px) {
+        padding: 1.5rem;
+
+        h2 {
+            font-size: 1.5rem;
+        }
+
+        .button-group {
+            flex-direction: column;
+
+            button {
+                width: 100%;
+            }
+        }
+    }
+}

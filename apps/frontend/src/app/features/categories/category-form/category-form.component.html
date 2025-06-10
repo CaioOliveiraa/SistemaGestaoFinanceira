@@ -1,0 +1,42 @@
+<div class="category-form-container">
+    <h2>{{ isEditMode ? 'Editar Categoria' : 'Nova Categoria' }}</h2>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <!-- Nome -->
+        <div class="form-group">
+            <label for="name">Nome</label>
+            <input id="name" type="text" formControlName="name" placeholder="Ex: Alimentação" />
+            <div class="error" *ngIf="form.get('name')?.touched && form.get('name')?.invalid">
+                <small>Nome é obrigatório.</small>
+            </div>
+        </div>
+
+        <!-- Tipo -->
+        <div class="form-group">
+            <label for="type">Tipo</label>
+            <select id="type" formControlName="type">
+                <option [ngValue]="0">Receita</option>
+                <option [ngValue]="1">Despesa</option>
+            </select>
+            <div class="error" *ngIf="form.get('type')?.touched && form.get('type')?.invalid">
+                <small>Tipo é obrigatório.</small>
+            </div>
+        </div>
+
+        <!-- Fixa? -->
+        <div class="form-group checkbox">
+            <label>
+                <input type="checkbox" formControlName="fixed" />
+                Fixa (recorrente)
+            </label>
+        </div>
+
+        <!-- Botões -->
+        <div class="button-group">
+            <button type="submit" [disabled]="form.invalid">
+                {{ isEditMode ? 'Atualizar' : 'Criar' }}
+            </button>
+            <button type="button" (click)="onCancel()">Cancelar</button>
+        </div>
+    </form>
+</div>

@@ -5,15 +5,15 @@
         <div class="cards">
             <div class="card income">
                 <h3>Receita</h3>
-                <p>{{ summary.income | currency:'BRL' }}</p>
+                <p>{{ summary?.income | currency:'BRL' }}</p>
             </div>
             <div class="card expense">
                 <h3>Despesa</h3>
-                <p>{{ summary.expense | currency:'BRL' }}</p>
+                <p>{{ summary?.expense | currency:'BRL' }}</p>
             </div>
             <div class="card balance">
                 <h3>Saldo</h3>
-                <p>{{ summary.balance | currency:'BRL' }}</p>
+                <p>{{ summary?.balance | currency:'BRL' }}</p>
             </div>
         </div>
     </section>

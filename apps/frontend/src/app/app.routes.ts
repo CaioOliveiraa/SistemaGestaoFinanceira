@@ -5,6 +5,8 @@ import { LoginComponent } from './features/auth/login/login.component';
 import { RegisterComponent } from './features/auth/register/register.component';
 import { authGuard } from './core/auth.guard';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
+import { CategoryListComponent } from './features/categories/category-list/category-list.component';
+import { CategoryFormComponent } from './features/categories/category-form/category-form.component';
 
 export const routes: Routes = [
     {
@@ -26,6 +28,14 @@ export const routes: Routes = [
                 pathMatch: 'full',
                 component: DashboardComponent,
             },
+            {
+                path: 'categories',
+                pathMatch: 'full',
+                redirectTo: 'categories/list',
+            },
+            { path: 'categories/list', component: CategoryListComponent },
+            { path: 'categories/create', component: CategoryFormComponent },
+            { path: 'categories/edit/:id', component: CategoryFormComponent },
             // ...
             { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
         ],
