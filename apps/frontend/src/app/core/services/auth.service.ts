@@ -3,19 +3,12 @@ import { ApiService } from './api.service';
 import { LoginDto } from '../../shared/models/login.dto';
 import { CreateUserDto } from '../../shared/models/create-user.dto';
 import { UserResponseDto } from '../../shared/models/user-response.dto';
-import { tap, Observable } from 'rxjs';
-
-/**
- * Encapsula endpoints de autenticação:
- * - /users      → register
- * - /auth/login → login
- * - /auth/logout→ logout
- * - /me         → obter dados do usuário logado
- */
+import { tap, Observable, BehaviorSubject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-    private currentUser: UserResponseDto | null = null;
+    private userSubject = new BehaviorSubject<UserResponseDto | null>(null);
+    user$ = this.userSubject.asObservable();
 
     constructor(private api: ApiService) {}
 
@@ -26,20 +19,22 @@ export class AuthService {
     login(dto: LoginDto): Observable<UserResponseDto> {
         return this.api
             .post<UserResponseDto>('auth/login', dto)
-            .pipe(tap(user => (this.currentUser = user)));
+            .pipe(tap(user => this.userSubject.next(user)));
     }
 
     logout(): Observable<void> {
         return this.api
             .post<void>('auth/logout', {})
-            .pipe(tap(() => (this.currentUser = null)));
+            .pipe(tap(() => this.userSubject.next(null)));
     }
 
     me(): Observable<UserResponseDto> {
-        return this.api.get<UserResponseDto>('auth/me');
+        return this.api
+            .get<UserResponseDto>('auth/me')
+            .pipe(tap(user => this.userSubject.next(user)));
     }
 
     isLoggedIn(): boolean {
-        return this.currentUser !== null;
+        return this.userSubject.value !== null;
     }
 }

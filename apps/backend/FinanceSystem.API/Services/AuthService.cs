@@ -39,6 +39,12 @@ namespace FinanceSystem.API.Services
             return (user, token);
         }
 
+        public async Task<User> GetUserByIdAsync(string id)
+        {
+            var user = await _userRepo.GetByIdAsync(Guid.Parse(id));
+            return user ?? throw new Exception("Usuário não encontrado");
+        }
+
         // — 2) Geração de token avulso (caso precise)
         public Task<string> GenerateTokenAsync(User user)
         {

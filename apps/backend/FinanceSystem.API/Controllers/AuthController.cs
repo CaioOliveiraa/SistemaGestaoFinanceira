@@ -54,6 +54,30 @@ namespace FinanceSystem.API.Controllers
             }
         }
 
+        [HttpGet("me")]
+        public async Task<IActionResult> GetCurrentUser()
+        {
+            try
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Obtém o ID do usuário a partir do token
+
+                if (string.IsNullOrEmpty(userId))
+                    return Unauthorized(new { error = "Usuário não autenticado" });
+
+                var user = await _authService.GetUserByIdAsync(userId);
+
+                if (user == null)
+                    return NotFound(new { error = "Usuário não encontrado" });
+
+                var userDto = _mapper.Map<UserResponseDto>(user);
+                return Ok(userDto);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { error = e.Message });
+            }
+        }
+
 
         /// <summary>
         /// Inicia o fluxo OAuth2 com o Google: redireciona para o consent screen.
