@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { Category } from '../../../shared/models/category.model';
 import { CategoryService } from '../../../core/services/category.service';
+import { parse } from 'path';
+import { stringify } from 'querystring';
 
 @Component({
     standalone: true,
@@ -44,5 +46,9 @@ export class CategoryListComponent implements OnInit {
 
     onCreate(): void {
         this.router.navigateByUrl('categories/create');
+    }
+
+    catType(type: 'Income' | 'Expense'): string {
+        return type == 'Income' ? 'Receita' : 'Despesa';
     }
 }
