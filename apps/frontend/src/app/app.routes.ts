@@ -7,6 +7,8 @@ import { authGuard } from './core/auth.guard';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { CategoryListComponent } from './features/categories/category-list/category-list.component';
 import { CategoryFormComponent } from './features/categories/category-form/category-form.component';
+import { TransactionListComponent } from './features/transactions/transaction-list/transaction-list.component';
+import { TransactionFormComponent } from './features/transactions/transaction-form/transaction-form.component';
 
 export const routes: Routes = [
     {
@@ -36,7 +38,20 @@ export const routes: Routes = [
             { path: 'categories/list', component: CategoryListComponent },
             { path: 'categories/create', component: CategoryFormComponent },
             { path: 'categories/edit/:id', component: CategoryFormComponent },
-            // ...
+            {
+                path: 'transactions',
+                pathMatch: 'full',
+                redirectTo: 'transactions/list',
+            },
+            { path: 'transactions/list', component: TransactionListComponent },
+            {
+                path: 'transactions/create',
+                component: TransactionFormComponent,
+            },
+            {
+                path: 'transactions/edit/:id',
+                component: TransactionFormComponent,
+            },
             { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
         ],
     },

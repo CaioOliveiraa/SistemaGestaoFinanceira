@@ -1,0 +1,32 @@
+<div class="transaction-list-container">
+    <h2>Transações</h2>
+    <button (click)="onCreate()">Nova Transação</button>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Descrição</th>
+                <th>Categoria</th>
+                <th>Tipo</th>
+                <th>Valor</th>
+                <th>Recorrente?</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let tx of transactions">
+                <td>{{ tx.date | date:'dd/MM/yyyy':'UTC' }}</td>
+                <td>{{ tx.description }}</td>
+                <td>{{ tx.categoryName }}</td>
+                <td>{{ transactionType(tx.type) }}</td>
+                <td>{{ tx.amount | currency:'BRL' }}</td>
+                <td>{{ tx.recurring ? 'Sim' : 'Não' }}</td>
+                <td>
+                    <button (click)="onEdit(tx.id)">Editar</button>
+                    <button (click)="onDelete(tx.id)">Excluir</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

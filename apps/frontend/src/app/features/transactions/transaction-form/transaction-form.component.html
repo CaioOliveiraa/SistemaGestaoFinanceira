@@ -1,0 +1,77 @@
+<div class="transaction-form-container">
+    <h2>
+        {{ isEditMode ? 'Editar Transação' : 'Nova Transação' }}
+    </h2>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <!-- Descrição -->
+        <div class="form-group">
+            <label for="description">Descrição</label>
+            <input id="description" type="text" formControlName="description" />
+            <div class="error" *ngIf="form.get('description')?.touched && form.get('description')?.invalid">
+                <small>Descrição é obrigatória.</small>
+            </div>
+        </div>
+
+        <!-- Valor -->
+        <div class="form-group">
+            <label for="amount">Valor (R$)</label>
+            <input id="amount" type="number" step="0.01" formControlName="amount" />
+            <div class="error" *ngIf="form.get('amount')?.touched && form.get('amount')?.invalid">
+                <small *ngIf="form.get('amount')?.errors?.['required']">Valor é obrigatório.</small>
+                <small *ngIf="form.get('amount')?.errors?.['min']">Valor deve ser maior que zero.</small>
+            </div>
+        </div>
+
+        <!-- Data -->
+        <div class="form-group">
+            <label for="date">Data</label>
+            <input id="date" type="date" formControlName="date" />
+            <div class="error" *ngIf="form.get('date')?.touched && form.get('date')?.invalid">
+                <small>Data é obrigatória.</small>
+            </div>
+        </div>
+
+        <!-- Tipo -->
+        <div class="form-group">
+            <label for="type">Tipo</label>
+            <select id="type" formControlName="type">
+                <option [ngValue]="0">Receita</option>
+                <option [ngValue]="1">Despesa</option>
+            </select>
+            <div class="error" *ngIf="form.get('type')?.touched && form.get('type')?.invalid">
+                <small>Tipo é obrigatório.</small>
+            </div>
+        </div>
+
+        <!-- Recorrente -->
+        <div class="form-group">
+            <label>
+                <input type="checkbox" formControlName="recurring" />
+                Recorrente
+            </label>
+        </div>
+
+        <!-- Categoria -->
+        <div class="form-group">
+            <label for="categoryId">Categoria</label>
+            <select id="categoryId" formControlName="categoryId">
+                <option value="">Selecione</option>
+                <option *ngFor="let cat of categories" [value]="cat.id">
+                    {{ cat.name }}
+                </option>
+            </select>
+            <div class="error" *ngIf="form.get('categoryId')?.touched && form.get('categoryId')?.invalid">
+                <small>Categoria é obrigatória.</small>
+            </div>
+        </div>
+
+        <!-- Botões -->
+        <div class="button-group">
+            <button type="submit" [disabled]="form.invalid">
+                {{ isEditMode ? 'Atualizar' : 'Criar' }}
+            </button>
+            <button type="button" (click)="onCancel()">Cancelar</button>
+        </div>
+    </form>
+</div>

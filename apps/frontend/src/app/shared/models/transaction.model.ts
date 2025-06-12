@@ -6,13 +6,14 @@ export interface Transaction {
     date: string;
     recurring: boolean;
     categoryId: string;
+    categoryName: string;
     userId: string;
     createdAt: string;
     updatedAt: string;
 }
 
 export interface CreateTransactionDto {
-    type: 'Income' | 'Expense';
+    type: number;
     amount: number;
     description: string;
     date: string;
@@ -21,7 +22,7 @@ export interface CreateTransactionDto {
 }
 
 export interface UpdateTransactionDto {
-    type: 'Income' | 'Expense';
+    type: number;
     amount: number;
     description: string;
     date: string;

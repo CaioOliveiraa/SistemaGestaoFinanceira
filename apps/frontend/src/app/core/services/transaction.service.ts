@@ -23,8 +23,8 @@ export class TransactionService {
         return this.api.post<Transaction>('transactions', dto);
     }
 
-    update(dto: UpdateTransactionDto): Observable<Transaction> {
-        return this.api.put<Transaction>('transactions', dto);
+    update(id: string, dto: UpdateTransactionDto): Observable<Transaction> {
+        return this.api.put<Transaction>(`transactions/${id}`, dto);
     }
 
     delete(id: string): Observable<void> {
