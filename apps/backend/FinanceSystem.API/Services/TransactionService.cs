@@ -25,7 +25,7 @@ namespace FinanceSystem.API.Services
                 Type = dto.Type,
                 Amount = dto.Amount,
                 Description = dto.Description,
-                Date = dto.Date,
+                Date = DateTime.SpecifyKind(dto.Date, DateTimeKind.Utc),
                 Recurring = dto.Recurring,
                 CategoryId = dto.CategoryId,
                 UserId = userId
@@ -44,7 +44,7 @@ namespace FinanceSystem.API.Services
             transaction.Type = dto.Type;
             transaction.Amount = dto.Amount;
             transaction.Description = dto.Description;
-            transaction.Date = dto.Date;
+            transaction.Date = DateTime.SpecifyKind(dto.Date, DateTimeKind.Utc);
             transaction.Recurring = dto.Recurring;
             transaction.CategoryId = dto.CategoryId;
             transaction.UpdatedAt = DateTime.UtcNow;
