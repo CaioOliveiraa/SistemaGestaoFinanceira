@@ -56,6 +56,15 @@ namespace FinanceSystem.API.Controllers
             return Created("", transaction);
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(Guid id)
+        {
+            var userId = GetUserId();
+            var transaction = await _service.GetByIdAsync(id, userId);
+
+            return transaction is null ? NotFound() : Ok(transaction);
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, [FromBody] TransactionDto dto)
         {

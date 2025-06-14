@@ -18,6 +18,12 @@ namespace FinanceSystem.API.Services
             return await _repo.GetAllByUserIdAsync(userId);
         }
 
+        public async Task<Transaction?> GetByIdAsync(Guid id, Guid userId)
+        {
+            var transaction = await _repo.GetByIdAsync(id);
+            return transaction?.UserId == userId ? transaction : null;
+        }
+
         public async Task<Transaction> CreateAsync(TransactionDto dto, Guid userId)
         {
             var Transaction = new Transaction

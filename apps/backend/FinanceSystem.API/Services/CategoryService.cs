@@ -18,6 +18,12 @@ namespace FinanceSystem.API.Services
             return await _repo.GetAllAsync(userId);
         }
 
+        public async Task<Category?> GetByIdAsync(Guid id, Guid userId)
+        {
+            var category = await _repo.GetByIdAsync(id);
+            return category?.UserId == userId ? category : null;
+        }
+
         public async Task<Category> CreateAsync(CategoryDto dto, Guid userId)
         {
             var category = new Category
@@ -27,16 +33,16 @@ namespace FinanceSystem.API.Services
                 Fixed = dto.Fixed,
                 UserId = userId
             };
-            
+
             await _repo.AddAsync(category);
             return category;
         }
 
-        public async Task<Category?> UpdateAsync( Guid id,CategoryDto dto, Guid userId)
+        public async Task<Category?> UpdateAsync(Guid id, CategoryDto dto, Guid userId)
         {
             var category = await _repo.GetByIdAsync(id);
 
-            if(category is null || category.UserId != userId)
+            if (category is null || category.UserId != userId)
             {
                 return null;
             }

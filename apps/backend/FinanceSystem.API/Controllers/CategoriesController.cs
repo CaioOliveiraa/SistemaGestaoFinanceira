@@ -42,6 +42,15 @@ namespace FinanceSystem.API.Controllers
             return Created($"api/categories/{category.Id}", category);
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(Guid id)
+        {
+            var userId = GetUserId();
+            var category = await _service.GetByIdAsync(id, userId);
+
+            return category is null ? NotFound() : Ok(category);
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, [FromBody] CategoryDto dto)
         {
@@ -50,7 +59,7 @@ namespace FinanceSystem.API.Controllers
             var userId = GetUserId();
             var updated = await _service.UpdateAsync(id, dto, userId);
 
-            return updated is null ? NotFound() : Ok(updated); 
+            return updated is null ? NotFound() : Ok(updated);
         }
 
         [HttpDelete("{id}")]

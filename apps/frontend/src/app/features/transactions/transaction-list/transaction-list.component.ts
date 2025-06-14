@@ -31,7 +31,7 @@ export class TransactionListComponent implements OnInit {
     }
 
     onEdit(id: string): void {
-        this.router.navigateByUrl(`transactions/${id}`);
+        this.router.navigateByUrl(`transactions/edit/${id}`);
     }
 
     onDelete(id: string): void {

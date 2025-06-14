@@ -33,7 +33,7 @@ export class CategoryListComponent implements OnInit {
     }
 
     onEdit(id: string): void {
-        this.router.navigateByUrl(`categories/${id}`);
+        this.router.navigateByUrl(`categories/edit/${id}`);
     }
 
     onDelete(id: string): void {
