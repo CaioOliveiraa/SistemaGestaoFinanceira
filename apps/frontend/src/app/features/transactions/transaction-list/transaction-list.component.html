@@ -1,6 +1,9 @@
 <div class="transaction-list-container">
     <h2>Transações</h2>
-    <button (click)="onCreate()">Nova Transação</button>
+
+    <button type="button" class="nova-transacao" (click)="onCreate()">
+        Nova Transação
+    </button>
 
     <table>
         <thead>
@@ -19,12 +22,18 @@
                 <td>{{ tx.date | date:'dd/MM/yyyy':'UTC' }}</td>
                 <td>{{ tx.description }}</td>
                 <td>{{ tx.categoryName }}</td>
+
                 <td>{{ transactionType(tx.type) }}</td>
-                <td>{{ tx.amount | currency:'BRL' }}</td>
+
+                <td class="amount" [class.income]="transactionType(tx.type) === 'Receita'"
+                    [class.expense]="transactionType(tx.type) === 'Despesa'">
+                    {{ tx.amount | currency:'BRL' }}
+                </td>
+
                 <td>{{ tx.recurring ? 'Sim' : 'Não' }}</td>
                 <td>
-                    <button (click)="onEdit(tx.id)">Editar</button>
-                    <button (click)="onDelete(tx.id)">Excluir</button>
+                    <button class="edit" (click)="onEdit(tx.id)">Editar</button>
+                    <button class="delete" (click)="onDelete(tx.id)">Excluir</button>
                 </td>
             </tr>
         </tbody>

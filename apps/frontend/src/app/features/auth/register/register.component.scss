@@ -1,47 +1,206 @@
-.register-container {
-    max-width: 400px;
-    margin: 2rem auto;
-    padding: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+/* idêntico ao login.component.scss */
 
-    .form-group {
-        margin-bottom: 1rem;
+/* full-screen host */
+:host {
+    display: block;
+    width: 100vw;
+    height: 100vh;
+}
 
-        label {
-            display: block;
-            margin-bottom: 0.25rem;
-        }
+/* wrapper centralizado */
+.auth-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* shapes de fundo animadas */
+.bg-shape {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.15;
+    animation: float 8s ease-in-out infinite;
+
+    &.one {
+        width: 70vw;
+        height: 70vw;
+        background: #1a1a2e;
+        top: -25vw;
+        left: -25vw;
+    }
+
+    &.two {
+        width: 60vw;
+        height: 60vw;
+        background: #16213e;
+        bottom: -20vw;
+        right: -20vw;
+        animation-duration: 10s;
+    }
+
+    &.three {
+        width: 50vw;
+        height: 50vw;
+        background: #0f3460;
+        top: 10vh;
+        right: -25vw;
+        animation-duration: 12s;
+        animation-delay: 2s;
+    }
+
+    &.four {
+        width: 55vw;
+        height: 55vw;
+        background: #53354a;
+        bottom: 5vh;
+        left: -30vw;
+        animation-duration: 9s;
+        animation-delay: 4s;
+    }
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0) scale(1);
+    }
+
+    50% {
+        transform: translateY(30px) scale(1.05);
+    }
+}
+
+/* card glassmorphism com borda degradê e pop-in */
+.login-card {
+    position: relative;
+    z-index: 1;
+    width: 90%;
+    max-width: 380px;
+    padding: 2rem 1.5rem;
+    background: rgba(18, 18, 18, 0.85);
+    border-radius: 1rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+
+    /* degradê na borda */
+    border: 2px solid transparent;
+    border-image-slice: 1;
+    border-image-source: linear-gradient(135deg, #00e0ff, #7380ff);
+
+    /* pop-in */
+    transform: scale(0.8);
+    animation: pop 0.5s ease-out forwards;
+}
+
+@keyframes pop {
+    to {
+        transform: scale(1);
+    }
+}
+
+.login-card h2 {
+    color: #fff;
+    margin-bottom: 0.25rem;
+}
+
+.login-card .login-tagline {
+    color: #ccc;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+}
+
+.login-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .input-group {
+        width: 100%;
 
         input {
             width: 100%;
-            padding: 0.5rem;
-            border: 1px solid #ccc;
-            border-radius: 2px;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            border-radius: 0.5rem;
+            color: #fff;
+            font-size: 1rem;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+            transition: background 0.2s ease, box-shadow 0.2s ease;
+
+            &::placeholder {
+                color: #777;
+            }
+
+            &:focus {
+                outline: none;
+                background: rgba(255, 255, 255, 0.1);
+                box-shadow: 0 0 8px rgba(0, 224, 255, 0.6);
+            }
         }
 
         .error small {
-            color: #c00;
+            color: #ff6b6b;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
         }
+    }
+
+    /* garantir box-sizing correto */
+    input,
+    select {
+        box-sizing: border-box;
     }
 
     button {
-        width: 100%;
         padding: 0.75rem;
-        background: #007bff;
-        color: white;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #fff;
+        background: linear-gradient(135deg, #00e0ff, #7380ff);
         border: none;
-        border-radius: 2px;
+        border-radius: 0.5rem;
         cursor: pointer;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+        &:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
+        }
 
         &:disabled {
-            opacity: 0.6;
+            background: rgba(255, 255, 255, 0.1);
             cursor: not-allowed;
         }
     }
+}
 
-    p {
-        text-align: center;
-        margin-top: 1rem;
+.login-card .register-text {
+    margin-top: 1rem;
+    color: #bbb;
+    font-size: 0.85rem;
+
+    a {
+        color: #00e0ff;
+        text-decoration: none;
+        font-weight: 600;
+        transition: text-decoration 0.2s;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+/* responsivo */
+@media (max-width: 400px) {
+    .login-card {
+        padding: 1.5rem 1rem;
     }
 }
