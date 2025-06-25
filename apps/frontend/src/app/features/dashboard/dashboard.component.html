@@ -2,30 +2,35 @@
     <!-- 1) Resumo Geral -->
     <section class="summary-section">
         <h2>Resumo Geral</h2>
+        <!-- 2) Botões de Export -->
+        <div class="export-buttons">
+            <button (click)="exportExcel()">Exportar Excel</button>
+            <button (click)="exportPdf()">Exportar PDF</button>
+        </div>
         <div class="cards">
             <div class="card income">
                 <h3>Receita</h3>
-                <p>{{ summary?.income | currency:'BRL' }}</p>
+                <p>{{ summary.income | currency:'BRL' }}</p>
             </div>
             <div class="card expense">
                 <h3>Despesa</h3>
-                <p>{{ summary?.expense | currency:'BRL' }}</p>
+                <p>{{ summary.expense | currency:'BRL' }}</p>
             </div>
             <div class="card balance">
                 <h3>Saldo</h3>
-                <p>{{ summary?.balance | currency:'BRL' }}</p>
+                <p>{{ summary.balance | currency:'BRL' }}</p>
             </div>
         </div>
     </section>
 
-    <!-- 2) Gráfico Mensal (barra) -->
+    <!-- 3) Gráfico Mensal (barra) -->
     <section class="chart-section">
         <h2>Histórico Mensal (últimos 6 meses)</h2>
         <canvas baseChart [data]="barChartData" [options]="barChartOptions" chartType="bar">
         </canvas>
     </section>
 
-    <!-- 3) Gráfico por Categoria (pizza) -->
+    <!-- 4) Gráfico por Categoria (pizza) -->
     <section class="chart-section">
         <h2>Por Categoria (mês atual)</h2>
         <canvas baseChart [data]="{ labels: pieChartLabels, datasets: [{ data: pieChartData }] }"
@@ -33,7 +38,7 @@
         </canvas>
     </section>
 
-    <!-- 4) Gráfico Diário (linha) -->
+    <!-- 5) Gráfico Diário (linha) -->
     <section class="chart-section">
         <h2>Movimentação Diária (últimos 30 dias)</h2>
         <canvas baseChart [data]="lineChartData" [options]="lineChartOptions" chartType="line">

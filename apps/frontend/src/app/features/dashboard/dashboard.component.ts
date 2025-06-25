@@ -9,6 +9,7 @@ import {
     DashboardByCategory,
     DashboardDaily,
 } from '../../shared/models/dashboard.model';
+import { environment } from '../../../environments/environment';
 
 @Component({
     standalone: true,
@@ -64,6 +65,15 @@ export class DashboardComponent {
     }
 
     // Metodos
+
+    exportExcel(): void {
+        window.open(`${environment.apiUrl}/export/excel`, '_blank');
+    }
+
+    exportPdf(): void {
+        window.open(`${environment.apiUrl}/export/pdf`, '_blank');
+    }
+
     private loadSummary() {
         this.dashboardService.getSummary().subscribe({
             next: data => (this.summary = data),
