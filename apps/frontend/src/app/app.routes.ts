@@ -9,6 +9,7 @@ import { CategoryListComponent } from './features/categories/category-list/categ
 import { CategoryFormComponent } from './features/categories/category-form/category-form.component';
 import { TransactionListComponent } from './features/transactions/transaction-list/transaction-list.component';
 import { TransactionFormComponent } from './features/transactions/transaction-form/transaction-form.component';
+import { NotificationComponent } from './features/notifications/notification/notification.component.spec';
 
 export const routes: Routes = [
     {
@@ -52,6 +53,7 @@ export const routes: Routes = [
                 path: 'transactions/edit/:id',
                 component: TransactionFormComponent,
             },
+            { path: 'notifications', component: NotificationComponent },
             { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
         ],
     },
