@@ -48,7 +48,7 @@ export class CategoryListComponent implements OnInit {
         this.router.navigateByUrl('categories/create');
     }
 
-    catType(type: 'Income' | 'Expense'): string {
-        return type == 'Income' ? 'Receita' : 'Despesa';
+    catType(type: string): string {
+        return type == '0' ? 'Receita' : 'Despesa';
     }
 }
