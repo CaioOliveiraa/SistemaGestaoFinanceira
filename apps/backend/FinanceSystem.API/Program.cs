@@ -38,7 +38,11 @@ builder.Services.AddScoped<DashboardService>();
 
 builder.Services.AddScoped<ExportService>();
 
+builder.Services.AddScoped<IReportRepository, ReportRepository>();
+builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IEmailService, SmtpEmailService>();
+
+builder.Services.AddHostedService<MonthEndEmailService>();
 
 // Configuração do JWT
 var jwtSecret = Environment.GetEnvironmentVariable("JwtSecret");

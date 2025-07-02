@@ -36,5 +36,10 @@ namespace FinanceSystem.API.Repositories
                     u.OAuthProvider == provider &&
                     u.OauthId == providerId);
         }
+
+        public async Task<IEnumerable<User>> GetAllAsync()
+        {
+            return await _context.Users.ToListAsync();
+        }
     }
 }
