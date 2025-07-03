@@ -8,7 +8,6 @@ import {
     Tooltip,
     ChartConfiguration,
     ChartOptions,
-    ChartType,
 } from 'chart.js';
 import { DashboardService } from '../../core/services/dashboard.service';
 import {
@@ -19,7 +18,7 @@ import {
 } from '../../shared/models/dashboard.model';
 import { environment } from '../../../environments/environment';
 
-// registra o que precisamos pro pie + legenda e tooltip
+// registra elementos necessários para legendas e tooltips
 Chart.register(ArcElement, Legend, Tooltip);
 
 @Component({
@@ -35,35 +34,103 @@ export class DashboardComponent implements OnInit {
     byCategoryData: DashboardByCategory[] = [];
     dailyData: DashboardDaily[] = [];
 
-    // -- gráfico de barras --
-    public barChartOptions: ChartOptions<'bar'> = { responsive: true };
+    /** Configuração visual comum a todos os gráficos */
+    private commonLegend = {
+        position: 'bottom' as const,
+        align: 'center' as const,
+        labels: {
+            usePointStyle: true,
+            pointStyle: 'circle' as const,
+            boxWidth: 10,
+            boxHeight: 10,
+            padding: 20,
+            font: { family: 'Arial, sans-serif', size: 14, weight: 500 },
+            color: '#4a4a4a',
+        },
+    };
+
+    private commonTooltip = {
+        enabled: true,
+        titleFont: { family: 'Arial, sans-serif', size: 14, weight: 500 },
+        bodyFont: { family: 'Arial, sans-serif' },
+    };
+
+    private commonLayout = { padding: { top: 30, bottom: 20 } };
+
+    /** Remove bordas brancas dos pontos (legendas e tooltips) */
+    private commonElements = { point: { borderWidth: 0 } };
+
+    // -- opções de gráfico de barras --
+    public barChartOptions: ChartOptions<'bar'> = {
+        responsive: true,
+        layout: this.commonLayout,
+        elements: this.commonElements,
+        plugins: {
+            legend: this.commonLegend,
+            tooltip: this.commonTooltip,
+        },
+    };
+
+    // -- opções de gráfico de pizza --
+    public pieChartOptions: ChartOptions<'pie'> = {
+        responsive: true,
+        layout: this.commonLayout,
+        elements: this.commonElements,
+        plugins: {
+            legend: this.commonLegend,
+            tooltip: this.commonTooltip,
+        },
+    };
+
+    // -- opções de gráfico de linha --
+    public lineChartOptions: ChartOptions<'line'> = {
+        responsive: true,
+        layout: this.commonLayout,
+        elements: this.commonElements,
+        plugins: {
+            legend: this.commonLegend,
+            tooltip: this.commonTooltip,
+        },
+        scales: {
+            x: { grid: { display: false } },
+            y: { grid: { display: false } },
+        },
+    };
+
     public barChartLabels: string[] = [];
     public barChartData: ChartConfiguration<'bar'>['data'] = {
         labels: [],
         datasets: [
-            { label: 'Receita', data: [] },
-            { label: 'Despesa', data: [] },
+            { label: 'Receita', data: [], borderRadius: 4 },
+            { label: 'Despesa', data: [], borderRadius: 4 },
         ],
     };
 
-    // -- gráfico de pizza --
-    public pieChartOptions: ChartOptions<'pie'> = { responsive: true };
     public pieChartLabels: string[] = [];
     public pieChartData: number[] = [];
-    public pieChartDatasetLabel: string = 'Gastos por Categoria';
+    public pieChartDatasetLabel = 'Gastos por Categoria';
 
-    // -- gráfico de linha --
-    public lineChartOptions: ChartOptions<'line'> = { responsive: true };
+    public lineChartType: 'line' = 'line';
     public lineChartLabels: string[] = [];
     public lineChartData: ChartConfiguration<'line'>['data'] = {
         labels: [],
         datasets: [
-            { label: 'Receita', data: [], tension: 0.4 },
-            { label: 'Despesa', data: [], tension: 0.4 },
+            {
+                label: 'Receita',
+                data: [],
+                tension: 0.4,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+            },
+            {
+                label: 'Despesa',
+                data: [],
+                tension: 0.4,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+            },
         ],
     };
-    // tipo fixo para o último gráfico
-    public lineChartType: 'line' = 'line';
 
     constructor(private dashboardService: DashboardService) {}
 
@@ -100,10 +167,12 @@ export class DashboardComponent implements OnInit {
                         {
                             label: 'Receita',
                             data: data.map(item => item.income),
+                            borderRadius: 4,
                         },
                         {
                             label: 'Despesa',
                             data: data.map(item => item.expense),
+                            borderRadius: 4,
                         },
                     ],
                 };
@@ -135,11 +204,15 @@ export class DashboardComponent implements OnInit {
                             label: 'Receita',
                             data: data.map(item => item.income),
                             tension: 0.4,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
                         },
                         {
                             label: 'Despesa',
                             data: data.map(item => item.expense),
                             tension: 0.4,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
                         },
                     ],
                 };
