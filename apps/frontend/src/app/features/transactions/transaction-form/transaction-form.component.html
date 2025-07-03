@@ -26,7 +26,7 @@
         <!-- Data -->
         <div class="form-group">
             <label for="date">Data</label>
-            <input id="date" type="date" formControlName="date" />
+            <input id="date" type="date" formControlName="date" [attr.max]="today" />
             <div class="error" *ngIf="form.get('date')?.touched && form.get('date')?.invalid">
                 <small>Data é obrigatória.</small>
             </div>

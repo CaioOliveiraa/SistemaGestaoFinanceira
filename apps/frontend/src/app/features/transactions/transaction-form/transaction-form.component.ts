@@ -20,6 +20,8 @@ import { CategoryService } from '../../../core/services/category.service';
     styleUrls: ['./transaction-form.component.scss'],
 })
 export class TransactionFormComponent implements OnInit {
+    public today = new Date().toISOString().split('T')[0];
+
     form: FormGroup = new FormGroup({});
     isEditMode = false;
     transactionId: string | null = null;
@@ -32,10 +34,11 @@ export class TransactionFormComponent implements OnInit {
         private router: Router,
         private route: ActivatedRoute
     ) {
+        const defaultDate = this.today;
         this.form = this.fb.group({
             description: ['', [Validators.required]],
             amount: ['', [Validators.required, Validators.min(0.01)]],
-            date: ['', [Validators.required]],
+            date: [defaultDate, [Validators.required]],
             type: [1, [Validators.required]],
             recurring: [false],
             categoryId: ['', [Validators.required]],
