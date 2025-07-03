@@ -1,7 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgChartsModule } from 'ng2-charts';
-import { ChartConfiguration, ChartOptions } from 'chart.js';
+import {
+    Chart,
+    ArcElement,
+    Legend,
+    Tooltip,
+    ChartConfiguration,
+    ChartOptions,
+    ChartType,
+} from 'chart.js';
 import { DashboardService } from '../../core/services/dashboard.service';
 import {
     DashboardSummary,
@@ -11,6 +19,9 @@ import {
 } from '../../shared/models/dashboard.model';
 import { environment } from '../../../environments/environment';
 
+// registra o que precisamos pro pie + legenda e tooltip
+Chart.register(ArcElement, Legend, Tooltip);
+
 @Component({
     standalone: true,
     imports: [CommonModule, NgChartsModule],
@@ -18,16 +29,14 @@ import { environment } from '../../../environments/environment';
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.scss'],
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
     summary!: DashboardSummary;
     monthlyData: DashboardMonthly[] = [];
     byCategoryData: DashboardByCategory[] = [];
     dailyData: DashboardDaily[] = [];
 
-    // Chart
-    public barChartOptions: ChartOptions = {
-        responsive: true,
-    };
+    // -- gráfico de barras --
+    public barChartOptions: ChartOptions<'bar'> = { responsive: true };
     public barChartLabels: string[] = [];
     public barChartData: ChartConfiguration<'bar'>['data'] = {
         labels: [],
@@ -37,23 +46,24 @@ export class DashboardComponent {
         ],
     };
 
-    public pieChartOptions: ChartOptions<'pie'> = {
-        responsive: true,
-    };
+    // -- gráfico de pizza --
+    public pieChartOptions: ChartOptions<'pie'> = { responsive: true };
     public pieChartLabels: string[] = [];
     public pieChartData: number[] = [];
+    public pieChartDatasetLabel: string = 'Gastos por Categoria';
 
-    public lineChartOptions: ChartOptions<'line'> = {
-        responsive: true,
-    };
+    // -- gráfico de linha --
+    public lineChartOptions: ChartOptions<'line'> = { responsive: true };
     public lineChartLabels: string[] = [];
     public lineChartData: ChartConfiguration<'line'>['data'] = {
         labels: [],
         datasets: [
-            { label: 'Receita', data: [] },
-            { label: 'Despesa', data: [] },
+            { label: 'Receita', data: [], tension: 0.4 },
+            { label: 'Despesa', data: [], tension: 0.4 },
         ],
     };
+    // tipo fixo para o último gráfico
+    public lineChartType: 'line' = 'line';
 
     constructor(private dashboardService: DashboardService) {}
 
@@ -63,8 +73,6 @@ export class DashboardComponent {
         this.loadByCategory();
         this.loadDaily();
     }
-
-    // Metodos
 
     exportExcel(): void {
         window.open(`${environment.apiUrl}/export/excel`, '_blank');
@@ -108,10 +116,8 @@ export class DashboardComponent {
         this.dashboardService.getByCategory().subscribe({
             next: data => {
                 this.byCategoryData = data;
-                const labels = data.map(item => item.category);
-                const values = data.map(item => item.total);
-                this.pieChartLabels = labels;
-                this.pieChartData = values;
+                this.pieChartLabels = data.map(item => item.category);
+                this.pieChartData = data.map(item => item.amount);
             },
             error: err => console.log('Erro ao carregar por Categoria', err),
         });
@@ -138,7 +144,7 @@ export class DashboardComponent {
                     ],
                 };
             },
-            error: err => console.log('Erro ao carregar Diario', err),
+            error: err => console.log('Erro ao carregar Diário', err),
         });
     }
 }

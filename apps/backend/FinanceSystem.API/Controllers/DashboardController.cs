@@ -17,7 +17,7 @@ namespace FinanceSystem.API.Controllers
             _service = service;
         }
 
-        private Guid GetUserId() => 
+        private Guid GetUserId() =>
             Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
         [HttpGet("summary")]
@@ -33,7 +33,7 @@ namespace FinanceSystem.API.Controllers
         {
             var userId = GetUserId();
             var result = await _service.GetMonthlyAsync(userId);
-            return Ok(result); 
+            return Ok(result);
         }
 
         [HttpGet("by-category")]

@@ -6,10 +6,12 @@ namespace FinanceSystem.API.Services
     public class DashboardService
     {
         private readonly ITransactionRepository _repo;
+        private readonly ILogger<DashboardService> _logger;
 
-        public DashboardService(ITransactionRepository repo)
+        public DashboardService(ITransactionRepository repo, ILogger<DashboardService> logger)
         {
             _repo = repo;
+            _logger = logger;
         }
 
         public async Task<object> GetSymmaryAsync(Guid userId)
@@ -63,17 +65,18 @@ namespace FinanceSystem.API.Services
             var transactions = await _repo.GetAllByUserIdAsync(userId);
 
             var grouped = transactions
-                .Where(t => t.Date.Year == DateTime.UtcNow.Year && t.Date.Month == DateTime.UtcNow.Month);
+                .Where(t => t.Date.Year == DateTime.UtcNow.Year && t.Date.Month == DateTime.UtcNow.Month)
+                .ToList();
 
             var result = grouped
                 .GroupBy(t => new { t.Category.Name, t.Category.Type })
-                .Select(t => new
+                .Select(g => new
                 {
-                    Category = t.Key.Name,
-                    Type = t.Key.Type.ToString(),
-                    Amount = t.Sum(t => t.Amount)
+                    Category = g.Key.Name,
+                    Type = g.Key.Type.ToString(),
+                    Amount = g.Sum(x => x.Amount)
                 })
-                .OrderByDescending(g => g.Amount)
+                .OrderByDescending(x => x.Amount)
                 .ToList();
 
             return result;

@@ -17,7 +17,7 @@ export interface DashboardMonthly {
 export interface DashboardByCategory {
     category: string;
     type: 'income' | 'expense';
-    total: number;
+    amount: number;
 }
 
 // Movimento diario nos ultimos 30 dias

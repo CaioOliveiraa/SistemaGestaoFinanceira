@@ -2,46 +2,55 @@
     <!-- 1) Resumo Geral -->
     <section class="summary-section">
         <h2>Resumo Geral</h2>
-        <!-- 2) Botões de Export -->
         <div class="export-buttons">
             <button (click)="exportExcel()">Exportar Excel</button>
             <button (click)="exportPdf()">Exportar PDF</button>
         </div>
-        <div class="cards">
+        <div class="cards" *ngIf="summary as s">
             <div class="card income">
                 <h3>Receita</h3>
-                <p>{{ summary.income | currency:'BRL' }}</p>
+                <p>{{ s.income | currency:'BRL' }}</p>
             </div>
             <div class="card expense">
                 <h3>Despesa</h3>
-                <p>{{ summary.expense | currency:'BRL' }}</p>
+                <p>{{ s.expense | currency:'BRL' }}</p>
             </div>
             <div class="card balance">
                 <h3>Saldo</h3>
-                <p>{{ summary.balance | currency:'BRL' }}</p>
+                <p>{{ s.balance | currency:'BRL' }}</p>
             </div>
         </div>
     </section>
 
-    <!-- 3) Gráfico Mensal (barra) -->
+    <!-- 2) Gráfico Mensal (barra) -->
     <section class="chart-section">
         <h2>Histórico Mensal (últimos 6 meses)</h2>
         <canvas baseChart [data]="barChartData" [options]="barChartOptions" chartType="bar">
         </canvas>
     </section>
 
-    <!-- 4) Gráfico por Categoria (pizza) -->
+    <!-- 3) Gráfico por Categoria (pizza) -->
     <section class="chart-section">
         <h2>Por Categoria (mês atual)</h2>
-        <canvas baseChart [data]="{ labels: pieChartLabels, datasets: [{ data: pieChartData }] }"
-            [options]="pieChartOptions" chartType="pie">
+        <canvas baseChart [data]="{
+            labels: pieChartLabels,
+            datasets: [
+            {
+                data: pieChartData,
+                label: pieChartDatasetLabel,
+                borderWidth: 0,
+                borderColor: 'transparent'
+            }
+            ]
+        }" [options]="pieChartOptions" [type]="'pie'">
         </canvas>
+
     </section>
 
-    <!-- 5) Gráfico Diário (linha) -->
+    <!-- 4) Gráfico Diário (linha) FIXADO EM LINE -->
     <section class="chart-section">
         <h2>Movimentação Diária (últimos 30 dias)</h2>
-        <canvas baseChart [data]="lineChartData" [options]="lineChartOptions" chartType="line">
+        <canvas baseChart [data]="lineChartData" [options]="lineChartOptions" [type]="lineChartType">
         </canvas>
     </section>
 </div>

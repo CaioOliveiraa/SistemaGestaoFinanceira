@@ -46,7 +46,7 @@ builder.Services.AddHostedService<MonthEndEmailService>();
 
 // Configuração do JWT
 var jwtSecret = Environment.GetEnvironmentVariable("JwtSecret");
-Console.WriteLine($"🔐 JwtSecret carregado: {jwtSecret}");
+// Console.WriteLine($"🔐 JwtSecret carregado: {jwtSecret}");
 var key = Encoding.UTF8.GetBytes(jwtSecret ?? "");
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
