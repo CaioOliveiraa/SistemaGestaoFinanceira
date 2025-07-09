@@ -32,19 +32,35 @@
     <!-- 3) Gráfico por Categoria (pizza) -->
     <section class="chart-section">
         <h2>Por Categoria (mês atual)</h2>
-        <canvas baseChart [data]="{
-            labels: pieChartLabels,
-            datasets: [
-            {
-                data: pieChartData,
-                label: pieChartDatasetLabel,
-                borderWidth: 0,
-                borderColor: 'transparent'
-            }
-            ]
-        }" [options]="pieChartOptions" [type]="'pie'">
-        </canvas>
+        <div class="pieChart-section">
+            <div class="pieChart">
+                <h3>Ganhos</h3>
+                <canvas baseChart [data]="{
+                    labels: incomePieChartLabels,
+                    datasets: [{
+                        data: incomePieChartData,
+                        label: 'Ganhos',
+                        borderWidth: 0,
+                        borderColor: 'transparent'
+                    }]
+                }" [options]="pieChartOptions" [type]="'pie'">
+                </canvas>
+            </div>
 
+            <div class="pieChart">
+                <h3>Despesas</h3>
+                <canvas baseChart [data]="{
+                    labels: expensePieChartLabels,
+                    datasets: [{
+                        data: expensePieChartData,
+                        label: 'Despesas',
+                        borderWidth: 0,
+                        borderColor: 'transparent'
+                    }]
+                }" [options]="pieChartOptions" [type]="'pie'">
+                </canvas>
+            </div>
+        </div>
     </section>
 
     <!-- 4) Gráfico Diário (linha) FIXADO EM LINE -->

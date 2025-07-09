@@ -106,8 +106,10 @@ export class DashboardComponent implements OnInit {
         ],
     };
 
-    public pieChartLabels: string[] = [];
-    public pieChartData: number[] = [];
+    public incomePieChartLabels: string[] = [];
+    public incomePieChartData: number[] = [];
+    public expensePieChartLabels: string[] = [];
+    public expensePieChartData: number[] = [];
     public pieChartDatasetLabel = 'Gastos por Categoria';
 
     public lineChartType: 'line' = 'line';
@@ -185,8 +187,14 @@ export class DashboardComponent implements OnInit {
         this.dashboardService.getByCategory().subscribe({
             next: data => {
                 this.byCategoryData = data;
-                this.pieChartLabels = data.map(item => item.category);
-                this.pieChartData = data.map(item => item.amount);
+
+                const income = data.filter(item => item.type === 'Income');
+                const expense = data.filter(item => item.type === 'Expense');
+
+                this.incomePieChartLabels = income.map(item => item.category);
+                this.incomePieChartData = income.map(item => item.amount);
+                this.expensePieChartLabels = expense.map(item => item.category);
+                this.expensePieChartData = expense.map(item => item.amount);
             },
             error: err => console.log('Erro ao carregar por Categoria', err),
         });

@@ -16,7 +16,7 @@ export interface DashboardMonthly {
 // Total por categorias do mes atual
 export interface DashboardByCategory {
     category: string;
-    type: 'income' | 'expense';
+    type: 'Income' | 'Expense';
     amount: number;
 }
 
