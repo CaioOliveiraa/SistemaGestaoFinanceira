@@ -144,11 +144,29 @@ export class DashboardComponent implements OnInit {
     }
 
     exportExcel(): void {
-        window.open(`${environment.apiUrl}/export/excel`, '_blank');
+        const now = new Date();
+        const startDate = new Date(now.getFullYear(), now.getMonth(), 1)
+            .toISOString()
+            .split('T')[0];
+        const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0)
+            .toISOString()
+            .split('T')[0];
+
+        const url = `${environment.apiUrl}/export/excel?startDate=${startDate}&endDate=${endDate}`;
+        window.open(url, '_blank');
     }
 
     exportPdf(): void {
-        window.open(`${environment.apiUrl}/export/pdf`, '_blank');
+        const now = new Date();
+        const startDate = new Date(now.getFullYear(), now.getMonth(), 1)
+            .toISOString()
+            .split('T')[0];
+        const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0)
+            .toISOString()
+            .split('T')[0];
+
+        const url = `${environment.apiUrl}/export/pdf?startDate=${startDate}&endDate=${endDate}`;
+        window.open(url, '_blank');
     }
 
     private loadSummary() {
