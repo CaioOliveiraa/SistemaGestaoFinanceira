@@ -22,6 +22,10 @@ export class AuthService {
             .pipe(tap(user => this.userSubject.next(user)));
     }
 
+    forgotPassword(email: string): Observable<void> {
+        return this.api.post<void>('auth/forgot-password', { email });
+    }
+
     logout(): Observable<void> {
         return this.api
             .post<void>('auth/logout', {})
