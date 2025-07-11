@@ -54,6 +54,50 @@ namespace FinanceSystem.API.Controllers
             }
         }
 
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            try
+            {
+                var token = await _authService.GeneratePasswordResetTokenAsync(dto.Email);
+
+                // Monta o link
+                var frontendUrl = _config["FrontendUrl"]?.TrimEnd('/') ?? throw new InvalidOperationException("FrontendUrl não configurado");
+                var resetLink = QueryHelpers.AddQueryString(
+                    $"{frontendUrl}/auth/reset-password",
+                    "token", token
+                );
+
+                await _authService.SendPasswordResetEmailAsync(dto.Email, resetLink);
+
+                return Ok(new { message = "E-mail de redefinição de senha enviado" });
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { error = e.Message });
+            }
+        }
+
+        [HttpPut("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] PasswordResetDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            try
+            {
+                await _authService.ResetPasswordAsync(dto);
+                return Ok(new { message = "Senha redefinida com sucesso" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
         [HttpGet("me")]
         public async Task<IActionResult> GetCurrentUser()
         {

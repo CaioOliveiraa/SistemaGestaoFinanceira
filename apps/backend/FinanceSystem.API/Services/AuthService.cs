@@ -1,17 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
 using System.Security.Claims;
 using System.Text.Json;
-using System.Threading.Tasks;
 using FinanceSystem.API.Dtos;
-using FinanceSystem.API.Helpers;
 using FinanceSystem.API.Models;
 using FinanceSystem.API.Repositories.Interfaces;
 using FinanceSystem.API.Services.Interfaces;
 using Google.Apis.Auth;
-using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.Text.Json.Serialization;
 
@@ -20,11 +13,15 @@ namespace FinanceSystem.API.Services
     public class AuthService : IAuthService
     {
         private readonly IUserRepository _userRepo;
+        private readonly IPasswordResetRepository _passwordResetRepo;
+        private readonly IEmailService _emailService;
         private readonly IConfiguration _config;
 
-        public AuthService(IUserRepository userRepo, IConfiguration config)
+        public AuthService(IUserRepository userRepo, IPasswordResetRepository passwordResetRepo, IEmailService emailService, IConfiguration config)
         {
             _userRepo = userRepo;
+            _passwordResetRepo = passwordResetRepo;
+            _emailService = emailService;
             _config = config;
         }
 
@@ -93,6 +90,63 @@ namespace FinanceSystem.API.Services
             var token = GenerateJwt(user);
             return (user, token);
         }
+
+        public async Task<string> GeneratePasswordResetTokenAsync(string email)
+        {
+            var user = await _userRepo.GetByEmailAsync(email) ?? throw new InvalidOperationException("E-mail não cadastrado");
+
+            var token = Guid.NewGuid().ToString("N");
+            var expiry = DateTime.UtcNow.AddHours(1);
+
+            var existing = await _passwordResetRepo.GetByUserIdAsync(user.Id);
+            if (existing != null)
+            {
+                existing.Token = token;
+                existing.ExpiresAt = expiry;
+                existing.CreatedAt = DateTime.UtcNow;
+                await _passwordResetRepo.UpdateAsync(existing);
+            }
+            else
+            {
+                var pr = new PasswordReset
+                {
+                    UserId = user.Id,
+                    Token = token,
+                    ExpiresAt = expiry
+                };
+                await _passwordResetRepo.AddAsync(pr);
+            }
+
+            return token;
+        }
+
+        public async Task SendPasswordResetEmailAsync(string email, string resetLink)
+        {
+            var body = $@"
+                <p>Para redefinir sua senha, clique <a href=""{resetLink}"">aqui</a>.</p>
+                <p>Se não solicitou, ignore este e-mail.</p>";
+
+            await _emailService.SendEmailAsync(email, "Recuperação de Senha", body);
+        }
+
+        public async Task ResetPasswordAsync(PasswordResetDto dto)
+        {
+            var pr = await _passwordResetRepo.GetByTokenAsync(dto.Token)
+                    ?? throw new InvalidOperationException("Token inválido ou expirado.");
+
+            if (pr.ExpiresAt < DateTime.UtcNow)
+                throw new InvalidOperationException("Token expirado.");
+
+            var user = await _userRepo.GetByIdAsync(pr.UserId) ?? throw new InvalidOperationException("Usuário não encontrado.");
+
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+            user.UpdatedAt = DateTime.UtcNow;
+            await _userRepo.UpdateAsync(user);
+
+            await _passwordResetRepo.DeleteAsync(pr);
+        }
+
+
 
         // — Métodos auxiliares privados — //
 

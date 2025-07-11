@@ -9,5 +9,6 @@ namespace FinanceSystem.API.Services.Interfaces
         Task<string> GenerateTokenAsync(User user);
         Task<User> FindOrCreateExternalUserAsync(string provider, string providerId, string email, string name);
         Task<(User user, string token)> LoginWithGoogleAsync(string code);
+        Task ResetPasswordAsync(PasswordResetDto dto);
     }
 }

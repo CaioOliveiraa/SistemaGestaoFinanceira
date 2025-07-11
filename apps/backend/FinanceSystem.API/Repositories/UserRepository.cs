@@ -29,6 +29,12 @@ namespace FinanceSystem.API.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task UpdateAsync(User user)
+        {
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<User?> GetByExternalIdAsync(string provider, string providerId)
         {
             return await _context.Users
