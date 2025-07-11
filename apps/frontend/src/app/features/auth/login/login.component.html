@@ -29,7 +29,7 @@
         </form>
 
         <p class="register-text">
-            <a routerLink="auth/forgot-password">Esqueci minha senha</a>
+            <a [routerLink]="['/auth','forgot-password']">Esqueci minha senha</a>
         </p>
         <p class="register-text">
             Não possui conta? <a [routerLink]="['/auth','register']">Cadastre-se</a>
