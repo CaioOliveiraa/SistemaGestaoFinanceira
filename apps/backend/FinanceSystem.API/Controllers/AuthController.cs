@@ -81,7 +81,7 @@ namespace FinanceSystem.API.Controllers
             }
         }
 
-        [HttpPut("reset-password")]
+        [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody] PasswordResetDto dto)
         {
             if (!ModelState.IsValid)
