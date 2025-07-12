@@ -30,7 +30,7 @@ export class ForgotPasswordComponent {
     }
 
     onSubmit(): void {
-        if (this.form.valid) {
+        if (this.form.invalid) {
             this.form.markAllAsTouched();
             return;
         }
