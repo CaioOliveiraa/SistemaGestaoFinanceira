@@ -1,3 +1,4 @@
+// apps/frontend/src/app/features/auth/reset-password/reset-password.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -18,7 +19,7 @@ import { AuthService } from '../../../core/services/auth.service';
 })
 export class ResetPasswordComponent implements OnInit {
     form: FormGroup;
-    token!: string;
+    token = '';
     submitting = false;
     errorMsg: string | null = null;
     successMsg: string | null = null;
@@ -37,46 +38,44 @@ export class ResetPasswordComponent implements OnInit {
                 ],
                 confirmPassword: ['', [Validators.required]],
             },
-            { Validators: this.passwordMatch }
+            { validators: this.passwordsMatch }
         );
     }
 
     ngOnInit(): void {
         this.token = this.route.snapshot.queryParamMap.get('token') || '';
         if (!this.token) {
-            this.errorMsg = 'Token de recuperação inválido.';
+            this.errorMsg = 'Token de recuperação ausente ou inválido.';
         }
     }
 
-    private passwordMatch(group: FormGroup) {
-        const a = group.get('newPassword')?.value;
-        const b = group.get('confirmPassword')?.value;
-        return a === b ? null : { mismatch: true };
+    private passwordsMatch(group: FormGroup) {
+        const pwd = group.get('newPassword')?.value;
+        const confirm = group.get('confirmPassword')?.value;
+        return pwd === confirm ? null : { mismatch: true };
     }
 
     onSubmit(): void {
+        // bloqueia se inválido ou sem token
         if (this.form.invalid || !this.token) {
             this.form.markAllAsTouched();
             return;
         }
+
         this.submitting = true;
         this.errorMsg = this.successMsg = null;
 
-        this.auth
-            .resetPassword(this.token, this.form.get('newPassword')!.value)
-            .subscribe({
-                next: () => {
-                    this.successMsg = 'Senha alterada com sucesso!';
-                    setTimeout(
-                        () => this.router.navigate(['/auth/login']),
-                        2000
-                    );
-                },
-                error: (err: any) => {
-                    this.errorMsg =
-                        err.error?.error || 'Erro ao alterar senha.';
-                    this.submitting = false;
-                },
-            });
+        const newPwd = this.form.get('newPassword')!.value;
+        this.auth.resetPassword(this.token, newPwd).subscribe({
+            next: () => {
+                this.successMsg =
+                    'Senha alterada com sucesso! Redirecionando ao login…';
+                setTimeout(() => this.router.navigate(['/auth/login']), 2000);
+            },
+            error: err => {
+                this.errorMsg = err.error?.error || 'Erro ao alterar senha.';
+                this.submitting = false;
+            },
+        });
     }
 }

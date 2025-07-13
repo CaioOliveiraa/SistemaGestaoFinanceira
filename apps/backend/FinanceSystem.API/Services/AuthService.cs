@@ -16,25 +16,31 @@ namespace FinanceSystem.API.Services
         private readonly IPasswordResetRepository _passwordResetRepo;
         private readonly IEmailService _emailService;
         private readonly IConfiguration _config;
+        private readonly ILogger<AuthService> _logger;
 
-        public AuthService(IUserRepository userRepo, IPasswordResetRepository passwordResetRepo, IEmailService emailService, IConfiguration config)
+        public AuthService(IUserRepository userRepo, IPasswordResetRepository passwordResetRepo, IEmailService emailService, IConfiguration config, ILogger<AuthService> logger)
         {
             _userRepo = userRepo;
             _passwordResetRepo = passwordResetRepo;
             _emailService = emailService;
             _config = config;
+            _logger = logger;
         }
 
         // — 1) Autenticação tradicional (email + senha)
+
         public async Task<(User user, string token)> LoginAsync(LoginDto dto)
         {
-            var user = await _userRepo.GetByEmailAsync(dto.Email);
-            if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
+            var user = await _userRepo.GetByEmailAsync(dto.Email)
+                ?? throw new UnauthorizedAccessException("Credenciais inválidas");
+
+            var senha = dto.Password.Trim();
+            if (!BCrypt.Net.BCrypt.Verify(senha, user.PasswordHash))
                 throw new UnauthorizedAccessException("Credenciais inválidas");
 
-            var token = GenerateJwt(user);
-            return (user, token);
+            return (user, GenerateJwt(user));
         }
+
 
         public async Task<User> GetUserByIdAsync(string id)
         {
@@ -132,20 +138,23 @@ namespace FinanceSystem.API.Services
         public async Task ResetPasswordAsync(PasswordResetDto dto)
         {
             var pr = await _passwordResetRepo.GetByTokenAsync(dto.Token)
-                    ?? throw new InvalidOperationException("Token inválido ou expirado.");
+                ?? throw new InvalidOperationException("Token inválido ou expirado.");
 
             if (pr.ExpiresAt < DateTime.UtcNow)
                 throw new InvalidOperationException("Token expirado.");
 
-            var user = await _userRepo.GetByIdAsync(pr.UserId) ?? throw new InvalidOperationException("Usuário não encontrado.");
+            var user = await _userRepo.GetByIdAsync(pr.UserId)
+                ?? throw new InvalidOperationException("Usuário não encontrado.");
 
-            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+            var cleanPwd = dto.NewPassword.Trim();
+            var newHash = BCrypt.Net.BCrypt.HashPassword(cleanPwd);
+
+            user.PasswordHash = newHash;
             user.UpdatedAt = DateTime.UtcNow;
             await _userRepo.UpdateAsync(user);
 
             await _passwordResetRepo.DeleteAsync(pr);
         }
-
 
 
         // — Métodos auxiliares privados — //
