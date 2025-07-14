@@ -1,6 +1,6 @@
-name: CI - Frontend Angular
+# .github/workflows/ci.yml
+name: CI – Frontend Angular
 
-# Aciona o workflow em push ou PR na branch main
 on:
     push:
         branches: [main]
@@ -8,41 +8,59 @@ on:
         branches: [main]
 
 jobs:
-    build:
+    build-and-test:
+        name: Build, Lint, Test & Prerender
         runs-on: ubuntu-latest
+
         defaults:
             run:
                 working-directory: apps/frontend
 
+        strategy:
+            matrix:
+                node-version: [20.x]
+
         steps:
-            # Etapa 1: Clona o repositório
-            - name: 📥 Checkout do código
+            - name: 📥 Checkout repository
               uses: actions/checkout@v3
 
-            # Etapa 2: Configura Node.js e cache
-            - name: ⚙️ Setup Node.js
+            - name: ⚙️ Setup Node.js ${{ matrix.node-version }}
               uses: actions/setup-node@v3
               with:
-                  node-version: '20.19'
-                  cache: 'npm'
-                  cache-dependency-path: apps/frontend/package-lock.json
+                  node-version: ${{ matrix.node-version }}
+                  cache: npm
+                  cache-dependency-path: package-lock.json
 
-            # Etapa 3: Instala dependências
-            - name: 📦 Instala dependências
-              run: npm install
+            - name: 📦 Install dependencies
+              run: npm ci
 
-            # Etapa 4: Lint (boa prática, verifica código)
             - name: 🧹 Lint
-              run: npm run lint || echo "Lint failed, but continuing"
+              run: npm run lint
 
-            # Etapa 5: Testes (opcional, se você tiver)
-            # - name: 🧪 Testes unitários
-            #   run: npm run test -- --watch=false --browsers=ChromeHeadless
+            - name: 🧪 Run unit tests
+              run: npm run test -- --watch=false --browsers=ChromeHeadless
+              # Se não usar browser headless, adapte conforme sua suite
 
-            # Etapa 6: Build de produção
-            - name: 🏗️ Build de produção
+            - name: 🔒 Audit for vulnerabilities
+              run: npm audit --audit-level=high
+
+            - name: 🏗️ Build browser bundle
               run: npm run build -- --configuration=production
 
-            # Etapa 7: Deploy (exemplo comentado)
-            # - name: 🚀 Deploy para Vercel
+            - name: 🖥️ Build server bundle
+              run: npm run build:ssr
+
+            - name: 🚀 Prerender static routes
+              run: npx ng run frontend:prerender
+
+            - name: 📂 Upload dist as artifact
+              uses: actions/upload-artifact@v3
+              with:
+                  name: frontend-dist
+                  path: |
+                      dist/frontend/browser
+                      dist/frontend/server
+
+            # Exemplo de deploy (comente/descomente conforme precisar)
+            # - name: 🚀 Deploy to Vercel
             #   run: npx vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
