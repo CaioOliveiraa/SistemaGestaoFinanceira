@@ -16,48 +16,41 @@
             "prefix": "app",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular-devkit/build-angular:browser",
                     "options": {
-                        "outputPath": "dist/frontend",
+                        "outputPath": "dist/frontend/browser",
                         "index": "src/index.html",
-                        "browser": "src/main.ts",
+                        "main": "src/main.ts",
                         "polyfills": ["zone.js"],
                         "tsConfig": "tsconfig.app.json",
                         "inlineStyleLanguage": "scss",
                         "assets": [
-                            {
-                                "glob": "**/*",
-                                "input": "public"
-                            }
+                            { "glob": "**/*", "input": "public/assets" }
                         ],
                         "styles": ["src/styles.scss"],
-                        "scripts": [],
-                        "server": "src/main.server.ts",
-                        "outputMode": "server",
-                        "ssr": {
-                            "entry": "src/server.ts"
-                        }
+                        "scripts": []
                     },
                     "configurations": {
                         "production": {
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.prod.ts"
+                                }
+                            ],
+                            "optimization": true,
+                            "outputHashing": "all",
+                            "sourceMap": false,
+                            "namedChunks": false,
+                            "vendorChunk": false,
+                            "buildOptimizer": true,
                             "budgets": [
                                 {
                                     "type": "initial",
-                                    "maximumWarning": "500kB",
-                                    "maximumError": "1MB"
-                                },
-                                {
-                                    "type": "anyComponentStyle",
-                                    "maximumWarning": "4kB",
-                                    "maximumError": "8kB"
+                                    "maximumWarning": "500kb",
+                                    "maximumError": "1mb"
                                 }
-                            ],
-                            "outputHashing": "all"
-                        },
-                        "development": {
-                            "optimization": false,
-                            "extractLicenses": false,
-                            "sourceMap": true
+                            ]
                         }
                     },
                     "defaultConfiguration": "production"
@@ -74,6 +67,45 @@
                     },
                     "defaultConfiguration": "development"
                 },
+                "server": {
+                    "builder": "@angular-devkit/build-angular:server",
+                    "options": {
+                        "outputPath": "dist/frontend/server",
+                        "main": "src/main.server.ts",
+                        "tsConfig": "tsconfig.server.json"
+                    },
+                    "configurations": {
+                        "production": {
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.prod.ts"
+                                }
+                            ]
+                        }
+                    },
+                    "defaultConfiguration": "production"
+                },
+                "prerender": {
+                    "builder": "@angular-devkit/build-angular:prerender",
+                    "options": {
+                        "browserTarget": "frontend:build:production",
+                        "serverTarget": "frontend:server:production",
+                        "routes": [
+                            "/",
+                            "/auth/login",
+                            "/auth/forgot-password",
+                            "/auth/reset-password",
+                            "/dashboard",
+                            "/categories",
+                            "/transactions"
+                        ]
+                    },
+                    "configurations": {
+                        "production": {}
+                    },
+                    "defaultConfiguration": "production"
+                },
                 "extract-i18n": {
                     "builder": "@angular-devkit/build-angular:extract-i18n"
                 },
@@ -83,12 +115,7 @@
                         "polyfills": ["zone.js", "zone.js/testing"],
                         "tsConfig": "tsconfig.spec.json",
                         "inlineStyleLanguage": "scss",
-                        "assets": [
-                            {
-                                "glob": "**/*",
-                                "input": "public"
-                            }
-                        ],
+                        "assets": [{ "glob": "**/", "input": "public" }],
                         "styles": ["src/styles.scss"],
                         "scripts": []
                     }
@@ -96,7 +123,7 @@
                 "lint": {
                     "builder": "@angular-eslint/builder:lint",
                     "options": {
-                        "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+                        "lintFilePatterns": ["src//*.ts", "src//*.html"]
                     }
                 }
             }
@@ -104,32 +131,11 @@
     },
     "cli": {
         "analytics": "172ded14-d7bf-4b1d-9fbe-40809e0e688f",
-        "schematicCollections": ["angular-eslint"]
+        "schematicCollections": ["@schematics/angular"]
     },
     "schematics": {
-      "@schematics/angular:component": {
-        "type": "component"
-      },
-      "@schematics/angular:directive": {
-        "type": "directive"
-      },
-      "@schematics/angular:service": {
-        "type": "service"
-      },
-      "@schematics/angular:guard": {
-        "typeSeparator": "."
-      },
-      "@schematics/angular:interceptor": {
-        "typeSeparator": "."
-      },
-      "@schematics/angular:module": {
-        "typeSeparator": "."
-      },
-      "@schematics/angular:pipe": {
-        "typeSeparator": "."
-      },
-      "@schematics/angular:resolver": {
-        "typeSeparator": "."
-      }
+        "@schematics/angular:component": {
+            "style": "scss"
+        }
     }
 }
