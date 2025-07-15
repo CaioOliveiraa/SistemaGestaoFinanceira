@@ -36,9 +36,6 @@ jobs:
             - run: npm run build -- --configuration=production
               name: 🏗️ Build browser bundle
 
-            - run: npm run build:ssr
-              name: 🖥️ Build server bundle
-
             - run: npx ng run frontend:prerender
               name: 🚀 Prerender static routes
 
