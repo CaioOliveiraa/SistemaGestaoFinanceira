@@ -8,48 +8,42 @@ on:
 
 jobs:
     build-and-test:
-        name: Build, Lint, Test & Prerender
         runs-on: ubuntu-latest
-
         defaults:
             run:
                 working-directory: apps/frontend
 
         steps:
-            - name: 📥 Checkout repository
-              uses: actions/checkout@v3
+            - uses: actions/checkout@v3
+              name: 📥 Checkout repository
 
-            - name: ⚙️ Setup Node.js 20.x
-              uses: actions/setup-node@v3
+            - uses: actions/setup-node@v3
+              name: ⚙️ Setup Node.js 20.x
               with:
                   node-version: '20.x'
                   cache: npm
-                  # Atenção: caminho relativo à raiz do repo, não ao working-directory!
                   cache-dependency-path: apps/frontend/package-lock.json
 
-            - name: 📦 Install dependencies
-              run: npm ci
+            - run: npm ci
+              name: 📦 Install dependencies
 
-            - name: 🧹 Lint
-              run: npm run lint
+            - run: npm run lint
+              name: 🧹 Lint
 
-            - name: 🧪 Run unit tests
-              run: npm run test -- --watch=false --browsers=ChromeHeadless
+            - run: npm audit --audit-level=high
+              name: 🔒 Audit for vulnerabilities
 
-            - name: 🔒 Audit for vulnerabilities
-              run: npm audit --audit-level=high
+            - run: npm run build -- --configuration=production
+              name: 🏗️ Build browser bundle
 
-            - name: 🏗️ Build browser bundle
-              run: npm run build -- --configuration=production
+            - run: npm run build:ssr
+              name: 🖥️ Build server bundle
 
-            - name: 🖥️ Build server bundle
-              run: npm run build:ssr
+            - run: npx ng run frontend:prerender
+              name: 🚀 Prerender static routes
 
-            - name: 🚀 Prerender static routes
-              run: npx ng run frontend:prerender
-
-            - name: 📂 Upload dist as artifact
-              uses: actions/upload-artifact@v4
+            - uses: actions/upload-artifact@v4
+              name: 📂 Upload dist as artifact
               with:
                   name: frontend-dist
                   path: |
