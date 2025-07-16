@@ -127,23 +127,6 @@ SMTP_PASS=<Your_SMTP_Password>
 SMTP_FROM=<No-Reply_Email_Address>
 ```
 
-### 2. `appsettings.json`
-
-Em `apps/backend/appsettings.json`, você terá novamente essas configurações (sem as credenciais secretas, que podem vir do `.env` ou de variáveis de ambiente em produção):
-
-```json
-{
-  "Logging": {
-    "LogLevel": {
-      "Default": "Information",
-      "Microsoft.AspNetCore": "Warning"
-    }
-  },
-  "AllowedHosts": "*",
-  "FrontendUrl": "http://localhost:4200"
-}
-```
-
 ---
 
 ## 🚀 Executando com Docker
