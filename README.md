@@ -7,37 +7,85 @@ Este repositório contém um sistema full-stack de gestão financeira pessoal/em
 -   **Envio de E-mails** via SMTP (MailKit)
 -   **Reset de Senha** com token via e-mail
 -   **Autenticação**: JWT em cookie HTTP-Only + OAuth2 Google
--   **Frontend** Angular 19 standalone PWA
+-   **Frontend** Angular 19 standalone 
 
 ---
 
 ## 📁 Estrutura Geral
 
 ```bash
-.
-├── .env                       # Variáveis de ambiente (local/development)
-├── docker-compose.yml         # Orquestra backend + PostgreSQL
+/
+├── .env # Variáveis de ambiente para Docker e local
+├── docker-compose.yml # Orquestra backend + PostgreSQL
 ├── apps
-│   ├── backend                # Backend .NET 8
-│   │   ├── appsettings.json   # Configurações (inclui FrontendUrl, JwtSecret, SMTP_*)
-│   │   ├── Controllers        # AuthController, CategoryController, TransactionController
-│   │   ├── Data               # DbContext + Migrations
-│   │   ├── Dtos               # DTOs de transporte (login, reset, user, category, transaction)
-│   │   ├── Models             # Entidades EF Core (User, Category, Transaction, PasswordReset)
-│   │   ├── Repositories       # Interfaces e implementações de repositório
-│   │   ├── Services           # Lógica de negócio (AuthService, CategoryService, TransactionService, MonthEndEmailService)
-│   │   └── Program.cs         # Configuração de DI, DbContext, Swagger, SMTP, Hangfire-like scheduler
-│   └── frontend               # Frontend Angular 19 standalone
-│       ├── core
-│       │   ├── services       # ApiService (HttpClient), AuthService
-│       │   └── guards         # authGuard
-│       ├── features
-│       │   └── auth           # Login, Register, ForgotPassword, ResetPassword
-│       ├── shared             # Models/DTOs compartilhados
-│       ├── app.routes.ts      # Rotas lazy-loaded com guards
-│       └── main.ts            # Bootstrapping Angular PWA
-└── README.md                  # Este arquivo
+│ ├── backend # Backend .NET Core 8
+│ │ ├── appsettings.json # Configurações (FrontendUrl, JwtSecret, SMTP, OAuth)
+│ │ ├── Controllers # Endpoints API
+│ │ │ ├── AuthController.cs
+│ │ │ ├── CategoryController.cs
+│ │ │ └── TransactionController.cs
+│ │ ├── Data # DbContext + Migrations EF Core
+│ │ │ ├── FinanceDbContext.cs
+│ │ │ └── Migrations/
+│ │ ├── Dtos # Objetos de transferência (LoginDto, ResetPasswordDto, etc.)
+│ │ ├── Models # Entidades (User, Category, Transaction, PasswordReset)
+│ │ ├── Repositories # Interfaces e implementações de acesso a dados
+│ │ ├── Services # Lógica de negócio e serviços (AuthService, CategoryService, MonthEndEmailService)
+│ │ └── Program.cs # Configuração de DI, Swagger, CORS, SMTP, HostedService
+│ └── frontend # Frontend Angular 19 standalone (PWA)
+│ ├── src
+│ │ ├── app
+│ │ │ ├── core # CoreModule: ApiService, AuthService, AuthGuard, interceptors
+│ │ │ ├── features
+│ │ │ │ └── auth # Auth standalone components
+│ │ │ │ ├── login
+│ │ │ │ ├── register
+│ │ │ │ ├── forgot-password
+│ │ │ │ └── reset-password
+│ │ │ ├── shared # Interfaces de modelos compartilhados (User, Category, Transaction)
+│ │ │ ├── app.routes.ts # Rotas com lazy-load e guardas de autenticação
+│ │ │ └── main.ts 
+│ │ ├── assets
+│ │ ├── environments # Configuração de endpoints por ambiente
+│ │ └── index.html
+│ └── angular.json # Configurações do Angular CLI
+├── README.md # Este documento
+└── .gitignore
 ```
+
+---
+
+## 🚀 Funcionalidades Principais
+
+### Backend
+
+- **Autenticação & Segurança**  
+  - Login (email/senha) com BCrypt + JWT em cookie HTTP-Only  
+  - Login social Google OAuth2  
+  - Recuperação de senha via token (e-mail) e reset seguro  
+- **Gestão Financeira**  
+  - CRUD de **Categories** (fixas + personalizadas)  
+  - CRUD de **Transactions** (receitas, despesas, recorrência, data)  
+  - Exportação de relatórios em PDF/Excel  
+- **Serviço Agendado**  
+  - Envio automático mensal de resumo de ganhos/gastos por e-mail  
+- **Infraestrutura**  
+  - Containerização via Docker Compose  
+  - Versionamento de esquema com EF Core Migrations  
+
+### Frontend (Angular 19 Standalone)
+
+- **PWA Offline-First**: cache inteligente e funcionamento sem conexão  
+- **Fluxo de Autenticação**  
+  - Componentes standalone para Login, Registro, Forgot & Reset Password  
+  - AuthGuard para proteger rotas e interceptors para headers & erros  
+- **Dashboard Interativo**  
+  - Gráficos de fluxo de caixa e balanço mensal  
+  - Tabela de histórico de transações com filtros avançados  
+- **Formulários Reativos**  
+  - Validações inline e mensagens de erro claras  
+- **Lazy Loading** de módulos de feature  
+- **Feedback ao Usuário**: snackbars e spinners durante ações  
 
 ---
 
@@ -56,33 +104,27 @@ Este repositório contém um sistema full-stack de gestão financeira pessoal/em
 
 Crie um arquivo `.env` na raiz (será lido pelo Docker e pelo backend):
 
-ini
-
 ```ini
-# PostgreSQL
-DB_HOST=postgres-finance
-DB_PORT=5432
-DB_NAME=finance_db
-DB_USER=postgres
-DB_PASS=postgres
+# ConnectionString única usada pelo DbContext
+DB_CONNECTION=Host=<HOST>;Port=<PORT>;Database=<DB_NAME>;Username=<DB_USER>;Password=<DB_PASS>
 
 # JWT
-JwtSecret=UmSegredoLongoParaAssinarJWT
+JwtSecret=JwtSecret=<Your_JWT_Secret>
 
-# Frontend
+# Frontend (usado para gerar o link de reset_password)
 FrontendUrl=http://localhost:4200
 
 # Google OAuth2
-GOOGLE_CLIENT_ID=<sua-client-id>
-GOOGLE_CLIENT_SECRET=<seu-client-secret>
-GOOGLE_REDIRECT_URI=http://localhost:5062/api/auth/oauth/google/callback
+GOOGLE_CLIENT_ID=<Your_Google_Client_ID>
+GOOGLE_CLIENT_SECRET=<Your_Google_Client_Secret>
+GOOGLE_REDIRECT_URI=<Your_Google_Redirect_URI>
 
-# SMTP (MailKit)
-SMTP_HOST=smtp.example.com
-SMTP_PORT=587
-SMTP_USER=user@example.com
-SMTP_PASS=senha_smtp
-SMTP_FROM=no-reply@seusistema.com
+# SMTP (para envio de e-mail de reset e resumo mensal)
+SMTP_HOST=<Your_SMTP_Host>
+SMTP_PORT=<Your_SMTP_Port>
+SMTP_USER=<Your_SMTP_User>
+SMTP_PASS=<Your_SMTP_Password>
+SMTP_FROM=<No-Reply_Email_Address>
 ```
 
 ### 2. `appsettings.json`
@@ -91,23 +133,14 @@ Em `apps/backend/appsettings.json`, você terá novamente essas configurações 
 
 ```json
 {
-    "Logging": {
-        "LogLevel": {
-            "Default": "Information",
-            "Microsoft.AspNetCore": "Warning"
-        }
-    },
-    "AllowedHosts": "*",
-    "FrontendUrl": "http://localhost:4200",
-    "JwtSecret": "",
-    "GOOGLE_CLIENT_ID": "",
-    "GOOGLE_CLIENT_SECRET": "",
-    "GOOGLE_REDIRECT_URI": "",
-    "SMTP_HOST": "",
-    "SMTP_PORT": "",
-    "SMTP_USER": "",
-    "SMTP_PASS": "",
-    "SMTP_FROM": ""
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+  "FrontendUrl": "http://localhost:4200"
 }
 ```
 
