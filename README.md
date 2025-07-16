@@ -171,20 +171,46 @@ Dentro da pasta `apps/backend`, você pode executar:
 dotnet run
 ```
 
-### Endpoints Principais
+| Rota                                             | Método   | Descrição                                        |
+| ------------------------------------------------ | -------- | ------------------------------------------------ |
+| **Auth**                                         |          |                                                   |
+| `POST /api/auth/login`                           | POST     | Login (email+senha) retorna `UserResponseDto`. Cookie JWT. |
+| `POST /api/auth/logout`                          | POST     | Remove cookie `jwt`.                             |
+| `POST /api/auth/forgot-password`                 | POST     | Gera token e envia e-mail de recuperação (sempre 200). |
+| `POST /api/auth/reset-password`                  | POST     | Recebe `{ token, newPassword }`, redefine senha. |
+| `GET  /api/auth/me`                              | GET      | Retorna `UserResponseDto` do usuário logado.     |
+| `GET  /api/auth/oauth/google`                    | GET      | Redireciona para OAuth2 Google.                  |
+| `GET  /api/auth/oauth/google/callback`           | GET      | Callback para trocar code por token + login.     |
+| **Categories**                                   |          |                                                   |
+| `GET    /api/categories`                         | GET      | Lista todas as categorias do usuário.            |
+| `GET    /api/categories/{id}`                    | GET      | Detalha uma categoria por ID.                    |
+| `POST   /api/categories`                         | POST     | Cria nova categoria (`CategoryDto`).             |
+| `PUT    /api/categories/{id}`                    | PUT      | Atualiza categoria existente.                    |
+| `DELETE /api/categories/{id}`                    | DELETE   | Remove categoria.                                |
+| **Transactions**                                 |          |                                                   |
+| `GET    /api/transactions`                       | GET      | Lista todas as transações do usuário.            |
+| `GET    /api/transactions/{id}`                  | GET      | Detalha uma transação por ID.                    |
+| `POST   /api/transactions`                       | POST     | Cria nova transação (`TransactionDto`).          |
+| `PUT    /api/transactions/{id}`                  | PUT      | Atualiza transação existente.                    |
+| `DELETE /api/transactions/{id}`                  | DELETE   | Remove transação.                                |
 
-| Rota                                  | Método | Descrição                                                  |
-| ------------------------------------- | ------ | ---------------------------------------------------------- |
-| `POST /api/auth/login`                | POST   | Login (email+senha) retorna `UserResponseDto`. Cookie JWT. |
-| `POST /api/auth/logout`               | POST   | Remove cookie `jwt`.                                       |
-| `POST /api/auth/forgot-password`      | POST   | Gera token e envia e-mail de recuperação (sempre 200).     |
-| `POST /api/auth/reset-password`       | POST   | Recebe `{ token, newPassword }`, redefine senha.           |
-| `GET /api/auth/me`                    | GET    | Retorna `UserResponseDto` do usuário logado.               |
-| `GET /api/auth/oauth/google`          | GET    | Redireciona para OAuth2 Google.                            |
-| `GET /api/auth/oauth/google/callback` | GET    | Callback para trocar code por token + login.               |
+---
 
-_NB: há também controllers de **Categories** e **Transactions** com CRUD completo e DTOs padronizados._
+### Rotas Principais (Frontend)
 
+```text
+/auth/login              → LoginComponent
+/auth/register           → RegisterComponent
+/auth/forgot-password    → ForgotPasswordComponent
+/auth/reset-password     → ResetPasswordComponent
+/dashboard               → DashboardComponent
+/categories              → CategoryListComponent
+/categories/new          → CategoryFormComponent (create)
+/categories/:id/edit     → CategoryFormComponent (edit)
+/transactions            → TransactionListComponent
+/transactions/new        → TransactionFormComponent (create)
+/transactions/:id/edit   → TransactionFormComponent (edit)
+```
 ---
 
 ## 📦 Frontend (Angular 19 Standalone PWA)
