@@ -62,6 +62,15 @@ namespace FinanceSystem.API.Services
             if (user != null)
                 return user;
 
+            var existingUser = await _userRepo.GetByEmailAsync(email);
+            if (existingUser != null)
+            {
+                existingUser.OAuthProvider = provider;
+                existingUser.OauthId = providerId;
+                await _userRepo.UpdateAsync(existingUser);
+                return existingUser;
+            }
+
             user = new User
             {
                 Name = name,
