@@ -51,6 +51,20 @@
                                     "maximumError": "1mb"
                                 }
                             ]
+                        },
+                        "development": {
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.ts"
+                                }
+                            ],
+                            "optimization": false,
+                            "outputHashing": "none",
+                            "sourceMap": true,
+                            "namedChunks": true,
+                            "vendorChunk": true,
+                            "buildOptimizer": false
                         }
                     },
                     "defaultConfiguration": "production"
