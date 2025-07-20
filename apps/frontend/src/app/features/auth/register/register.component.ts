@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
     selector: 'app-register',
@@ -17,6 +18,7 @@ import { AuthService } from '../../../core/services/auth.service';
 })
 export class RegisterComponent {
     form: FormGroup;
+    oauthGoogleUrl = `${environment.apiUrl}/auth/oauth/google`;
 
     constructor(
         private fb: FormBuilder,

@@ -181,6 +181,25 @@
     }
 }
 
+.oauth-btn {
+    display: block;
+    margin-top: 0.5rem;
+    text-align: center;
+    background: #db4437;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
+    }
+}
+
 .login-card .register-text {
     margin-top: 1rem;
     color: #bbb;

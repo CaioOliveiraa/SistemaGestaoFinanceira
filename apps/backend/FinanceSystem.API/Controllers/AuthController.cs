@@ -168,13 +168,16 @@ namespace FinanceSystem.API.Controllers
                     SameSite = SameSiteMode.Strict
                 });
 
-                var userDto = _mapper.Map<UserResponseDto>(user);
-                return Ok(userDto);
+                var frontend = _config["FrontendUrl"]?.TrimEnd('/') ?? "http://localhost:4200";
+                var callbackUrl = $"{frontend}/auth/oauth-callback";
+                return Redirect(callbackUrl);
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Erro ao processar callback do Google: " + ex);
-                return BadRequest(new { error = ex.Message });
+                var frontend = _config["FrontendUrl"]?.TrimEnd('/') ?? "http://localhost:4200";
+                var callbackUrl = $"{frontend}/auth/oauth-callback?error=1";
+                return Redirect(callbackUrl);
             }
         }
 

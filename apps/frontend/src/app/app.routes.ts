@@ -5,6 +5,7 @@ import { LoginComponent } from './features/auth/login/login.component';
 import { RegisterComponent } from './features/auth/register/register.component';
 import { ForgotPasswordComponent } from './features/auth/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './features/auth/reset-password/reset-password.component';
+import { OauthCallbackComponent } from './features/auth/oauth-callback/oauth-callback.component';
 import { authGuard } from './core/auth.guard';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { CategoryListComponent } from './features/categories/category-list/category-list.component';
@@ -24,6 +25,7 @@ export const routes: Routes = [
                 path: 'reset-password',
                 component: ResetPasswordComponent,
             },
+            { path: 'oauth-callback', component: OauthCallbackComponent },
             { path: '', pathMatch: 'full', redirectTo: 'login' },
         ],
     },

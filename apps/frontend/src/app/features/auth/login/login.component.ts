@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
     selector: 'app-login',
@@ -18,6 +19,7 @@ import { AuthService } from '../../../core/services/auth.service';
 })
 export class LoginComponent {
     form: FormGroup;
+    oauthGoogleUrl = `${environment.apiUrl}/auth/oauth/google`;
 
     constructor(
         private fb: FormBuilder,
