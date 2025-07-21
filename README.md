@@ -41,7 +41,8 @@ Este repositório contém um sistema full-stack de gestão financeira pessoal/em
 │ │ │ │ ├── login
 │ │ │ │ ├── register
 │ │ │ │ ├── forgot-password
-│ │ │ │ └── reset-password
+│ │ │ │ ├── reset-password
+│ │ │ │ └── oauth-call
 │ │ │ ├── shared # Interfaces de modelos compartilhados (User, Category, Transaction)
 │ │ │ ├── app.routes.ts # Rotas com lazy-load e guardas de autenticação
 │ │ │ └── main.ts 
