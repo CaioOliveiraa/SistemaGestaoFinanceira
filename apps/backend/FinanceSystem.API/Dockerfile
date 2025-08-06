@@ -9,9 +9,10 @@ RUN dotnet publish -c Release -o out
 # Etapa de runtime
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
+
 COPY --from=build /app/out ./
 
-# Porta esperada pelo Azure
 EXPOSE 80
+ENV ASPNETCORE_URLS=http://+:80
 
 ENTRYPOINT ["dotnet", "FinanceSystem.API.dll"]
