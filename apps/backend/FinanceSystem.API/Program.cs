@@ -86,22 +86,30 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Cors
+// CORS
 var corsPolicyName = "AllowFrontend";
+
+var allowedOriginsFromEnv = (Environment.GetEnvironmentVariable("FrontendUrl") ?? "")
+    .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(
-        name: corsPolicyName,
-        policy =>
-        {
-            policy
-                .WithOrigins("http://localhost:4200")
-                .AllowAnyHeader()
-                .AllowAnyMethod()
-                .AllowCredentials();
-        }
-    );
+    options.AddPolicy(corsPolicyName, policy =>
+    {
+        policy
+            .SetIsOriginAllowed(origin =>
+            {
+                if (string.IsNullOrWhiteSpace(origin)) return false;
+
+                if (origin.EndsWith(".vercel.app", StringComparison.OrdinalIgnoreCase))
+                    return true;
+
+                return allowedOriginsFromEnv.Contains(origin, StringComparer.OrdinalIgnoreCase) || string.Equals(origin, "http://localhost:4200", StringComparison.OrdinalIgnoreCase);
+            })
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials(); // necessário porque você usa cookie JWT
+    });
 });
 
 var app = builder.Build();
@@ -113,8 +121,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// Em container, pode comentar se ficar aquele warning do https-port:
+// app.UseHttpsRedirection();
 
+// **CORS deve vir antes de Auth**
 app.UseCors(corsPolicyName);
 
 app.UseAuthentication();
