@@ -108,7 +108,7 @@ builder.Services.AddCors(options =>
             })
             .AllowAnyHeader()
             .AllowAnyMethod()
-            .AllowCredentials(); // necessário porque você usa cookie JWT
+            .AllowCredentials();
     });
 });
 
@@ -121,10 +121,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// Em container, pode comentar se ficar aquele warning do https-port:
-// app.UseHttpsRedirection();
 
-// **CORS deve vir antes de Auth**
 app.UseCors(corsPolicyName);
 
 app.UseAuthentication();
