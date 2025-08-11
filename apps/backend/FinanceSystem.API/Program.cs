@@ -6,6 +6,7 @@ using FinanceSystem.API.Repositories;
 using FinanceSystem.API.Repositories.Interfaces;
 using FinanceSystem.API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpOverrides; // <— necessário p/ proxy headers
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -13,47 +14,32 @@ var builder = WebApplication.CreateBuilder(args);
 
 QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
 
-// Carregar variáveis do arquivo .env
 Env.Load();
 builder.Configuration.AddEnvironmentVariables();
 
-// Registrar o DbContext com PostgreSQL
 builder.Services.AddDbContext<FinanceDbContext>(options =>
     options.UseNpgsql(Environment.GetEnvironmentVariable("DB_CONNECTION"))
 );
 
-// Registro de dependências (injeção de dependência)
 builder.Services.AddAutoMapper(typeof(MappingProfile));
-
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<IPasswordResetRepository, PasswordResetRepository>();
-
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<CategoryService>();
-
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<TransactionService>();
-
 builder.Services.AddScoped<DashboardService>();
-
 builder.Services.AddScoped<ExportService>();
-
 builder.Services.AddScoped<IReportRepository, ReportRepository>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IEmailService, SmtpEmailService>();
-
 builder.Services.AddHostedService<MonthEndEmailService>();
 
-// Configuração do JWT
 var jwtSecret = Environment.GetEnvironmentVariable("JwtSecret");
-
-// Console.WriteLine($"🔐 JwtSecret carregado: {jwtSecret}");
 var key = Encoding.UTF8.GetBytes(jwtSecret ?? "");
-
-builder
-    .Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -66,19 +52,14 @@ builder
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(key),
         };
-
-        // Extrair o token do cookie
         options.Events = new JwtBearerEvents
         {
             OnMessageReceived = context =>
             {
                 var token = context.Request.Cookies["jwt"];
-                if (!string.IsNullOrEmpty(token))
-                {
-                    context.Token = token;
-                }
+                if (!string.IsNullOrEmpty(token)) context.Token = token;
                 return Task.CompletedTask;
-            },
+            }
         };
     });
 
@@ -86,9 +67,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// CORS
 var corsPolicyName = "AllowFrontend";
-
 var allowedOriginsFromEnv = (Environment.GetEnvironmentVariable("FrontendUrl") ?? "")
     .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
@@ -100,11 +79,9 @@ builder.Services.AddCors(options =>
             .SetIsOriginAllowed(origin =>
             {
                 if (string.IsNullOrWhiteSpace(origin)) return false;
-
-                if (origin.EndsWith(".vercel.app", StringComparison.OrdinalIgnoreCase))
-                    return true;
-
-                return allowedOriginsFromEnv.Contains(origin, StringComparer.OrdinalIgnoreCase) || string.Equals(origin, "http://localhost:4200", StringComparison.OrdinalIgnoreCase);
+                if (origin.EndsWith(".vercel.app", StringComparison.OrdinalIgnoreCase)) return true;
+                if (string.Equals(origin, "http://localhost:4200", StringComparison.OrdinalIgnoreCase)) return true;
+                return allowedOriginsFromEnv.Contains(origin, StringComparer.OrdinalIgnoreCase);
             })
             .AllowAnyHeader()
             .AllowAnyMethod()
@@ -112,21 +89,27 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddHttpsRedirection(o => o.HttpsPort = 443);
+
 var app = builder.Build();
 
-// Middlewares
+// (opcional) Swagger só em Dev
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+// 1) Roteamento antes do CORS
+app.UseRouting();
 
-app.UseCors(corsPolicyName);
+// 2) CORS antes de Auth/Authorization
+app.UseCors("AllowFrontend");
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
+// 3) Exigir CORS nos endpoints mapeados
+app.MapControllers().RequireCors("AllowFrontend");
 
 app.Run();
