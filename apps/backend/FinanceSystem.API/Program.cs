@@ -68,8 +68,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var corsPolicyName = "AllowFrontend";
-var allowedOriginsFromEnv = (Environment.GetEnvironmentVariable("FrontendUrl") ?? "")
-    .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
 builder.Services.AddCors(options =>
 {
@@ -81,35 +79,34 @@ builder.Services.AddCors(options =>
                 if (string.IsNullOrWhiteSpace(origin)) return false;
                 if (origin.EndsWith(".vercel.app", StringComparison.OrdinalIgnoreCase)) return true;
                 if (string.Equals(origin, "http://localhost:4200", StringComparison.OrdinalIgnoreCase)) return true;
-                return allowedOriginsFromEnv.Contains(origin, StringComparer.OrdinalIgnoreCase);
+
+                var envList = (Environment.GetEnvironmentVariable("FrontendUrl") ?? "")
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+                return envList.Contains(origin, StringComparer.OrdinalIgnoreCase);
             })
-            .AllowAnyHeader()
+            .WithHeaders("Content-Type", "Authorization", "X-Requested-With")
             .AllowAnyMethod()
             .AllowCredentials();
     });
 });
 
-builder.Services.AddHttpsRedirection(o => o.HttpsPort = 443);
-
 var app = builder.Build();
 
-// (opcional) Swagger só em Dev
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// 1) Roteamento antes do CORS
 app.UseRouting();
 
-// 2) CORS antes de Auth/Authorization
-app.UseCors("AllowFrontend");
+// APLICA A POLICY AQUI (globalmente)
+app.UseCors(corsPolicyName);
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-// 3) Exigir CORS nos endpoints mapeados
-app.MapControllers().RequireCors("AllowFrontend");
+app.MapControllers(); // (sem RequireCors)
 
 app.Run();
