@@ -131,7 +131,7 @@ namespace FinanceSystem.API.Controllers
         {
             var clientId = _config["GOOGLE_CLIENT_ID"]!;
             var redirectUri = _config["GOOGLE_REDIRECT_URI"]!;
-            var state = Guid.NewGuid().ToString("N"); // opcional, para proteger contra CSRF
+            var state = Guid.NewGuid().ToString("N");
 
             // Construímos a URL de autorização do Google
             var url = QueryHelpers.AddQueryString(
@@ -165,7 +165,8 @@ namespace FinanceSystem.API.Controllers
                 {
                     HttpOnly = true,
                     Secure = true,
-                    SameSite = SameSiteMode.Strict
+                    SameSite = SameSiteMode.None,
+                    Expires = DateTime.UtcNow.AddHours(3)
                 });
 
                 var frontend = _config["FrontendUrl"]?.TrimEnd('/') ?? "http://localhost:4200";

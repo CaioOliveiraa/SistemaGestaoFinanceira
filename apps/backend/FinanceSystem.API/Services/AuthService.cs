@@ -180,23 +180,27 @@ namespace FinanceSystem.API.Services
             };
 
             using var http = new HttpClient();
-            var response = await http.PostAsync(
-                "https://oauth2.googleapis.com/token",
-                new FormUrlEncodedContent(values)
-            );
-            response.EnsureSuccessStatusCode();
+            var resp = await http.PostAsync("https://oauth2.googleapis.com/token",
+                                            new FormUrlEncodedContent(values));
 
-            var json = await response.Content.ReadAsStringAsync();
-            var result = JsonSerializer.Deserialize<GoogleTokenResponse>(json, new JsonSerializerOptions
+            var raw = await resp.Content.ReadAsStringAsync();
+
+            if (!resp.IsSuccessStatusCode)
             {
-                PropertyNameCaseInsensitive = true
-            });
+                _logger.LogError("Erro ao trocar code por token no Google. Status {Status}. Body: {Body}",
+                                (int)resp.StatusCode, raw);
+                throw new Exception($"Google token exchange failed: {(int)resp.StatusCode} {resp.ReasonPhrase}. Body: {raw}");
+            }
+
+            var result = JsonSerializer.Deserialize<GoogleTokenResponse>(raw,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             if (string.IsNullOrWhiteSpace(result?.IdToken))
-                throw new Exception("ID Token não retornado pelo Google. Resposta completa: " + json);
+                throw new Exception("ID Token não retornado pelo Google. Resposta: " + raw);
 
             return result!;
         }
+
 
         private string GenerateJwt(User user)
         {
