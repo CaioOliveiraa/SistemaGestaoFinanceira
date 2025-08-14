@@ -6,15 +6,19 @@ using FinanceSystem.API.Repositories;
 using FinanceSystem.API.Repositories.Interfaces;
 using FinanceSystem.API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.HttpOverrides; // <— necessário p/ proxy headers
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.ResponseCompression; // compressão
 
 var builder = WebApplication.CreateBuilder(args);
 
 QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
 
-Env.Load();
+if (builder.Environment.IsDevelopment())
+{
+    Env.Load();
+}
 builder.Configuration.AddEnvironmentVariables();
 
 builder.Services.AddDbContext<FinanceDbContext>(options =>
@@ -38,7 +42,14 @@ builder.Services.AddScoped<IEmailService, SmtpEmailService>();
 builder.Services.AddHostedService<MonthEndEmailService>();
 
 var jwtSecret = Environment.GetEnvironmentVariable("JwtSecret");
-var key = Encoding.UTF8.GetBytes(jwtSecret ?? "");
+if (string.IsNullOrWhiteSpace(jwtSecret) || jwtSecret.Length < 32)
+{
+    throw new InvalidOperationException(
+        "JwtSecret não configurado ou muito curto. Defina 'JwtSecret' com pelo menos 32 caracteres."
+    );
+}
+var key = Encoding.UTF8.GetBytes(jwtSecret);
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -63,29 +74,28 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var corsPolicyName = "AllowFrontend";
 
+builder.Services.AddResponseCompression(o =>
+{
+    o.EnableForHttps = true;
+    o.Providers.Add<BrotliCompressionProvider>();
+    o.Providers.Add<GzipCompressionProvider>();
+});
+
+
+var corsPolicyName = "DevOnly";
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(corsPolicyName, policy =>
     {
         policy
-            .SetIsOriginAllowed(origin =>
-            {
-                if (string.IsNullOrWhiteSpace(origin)) return false;
-                if (origin.EndsWith(".vercel.app", StringComparison.OrdinalIgnoreCase)) return true;
-                if (string.Equals(origin, "http://localhost:4200", StringComparison.OrdinalIgnoreCase)) return true;
-
-                var envList = (Environment.GetEnvironmentVariable("FrontendUrl") ?? "")
-                    .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-
-                return envList.Contains(origin, StringComparer.OrdinalIgnoreCase);
-            })
-            .WithHeaders("Content-Type", "Authorization", "X-Requested-With")
+            .WithOrigins("http://localhost:4200")
+            .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
     });
@@ -97,16 +107,20 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseCors("DevOnly");
 }
 
-app.UseRouting();
+app.UseHsts();
 
-// APLICA A POLICY AQUI (globalmente)
-app.UseCors(corsPolicyName);
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers(); // (sem RequireCors)
+app.MapControllers();
+app.MapGet("/health", () => Results.Ok("ok")).AllowAnonymous();
+
+app.MapFallbackToFile("index.html");
 
 app.Run();

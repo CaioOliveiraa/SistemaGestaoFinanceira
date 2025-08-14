@@ -14,15 +14,17 @@ services:
         volumes:
             - pgdata:/var/lib/postgresql/data
 
-    backend:
-        container_name: backend-finance
+    app:
+        container_name: finance-app
         build:
-            context: ./apps/backend/FinanceSystem.API
-        restart: always
+            context: .
+            dockerfile: Dockerfile
+        env_file:
+            - .env
         depends_on:
             - db
         ports:
-            - '3001:80' # Porta 3001 da maquina, 80 no container
+            - '3001:8080'
 
 volumes:
     pgdata:
