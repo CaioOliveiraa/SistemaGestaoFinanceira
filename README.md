@@ -24,8 +24,6 @@ Em produção, o backend também serve o frontend, permitindo deploy único no *
     
 -   [Migrations](#migrations)
     
--   [Testes](#testes)
-    
 
 ## Funcionalidades
 
@@ -167,10 +165,3 @@ Quando alterar as entidades do backend execute:
 ```
 
 ----------
-
-## Testes
-
-Os testes de frontend podem ser executados com:
-
-`cd apps/frontend
-npm test`
